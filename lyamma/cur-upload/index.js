@@ -20,7 +20,7 @@ exports.handler = async (event) => {
       Bucket: bucketName,
       Key: fileName,
       Body: buffer,
-      ContentType: "application/octet-stream" // Adjust as needed
+      ContentType: "application/octet-stream"
     };
 
     await s3.send(new PutObjectCommand(params));
