@@ -1,9 +1,12 @@
-# kalpa-optimise
-Kalpa Optimise is an AI-powered cloud cost optimisation platform that helps to reduce your AWS cloud expenditure.
+# React + Vite
 
-Hi Team
-based on this ADR & example
-i have created  a unique subdomain for ovatient-metrohealth tenant prod-us env for better logging
-in the following PR [https://github.com/EverlongProject/terraform-cloudflare/pull/189]
-can i get a review  on the above PR :code-review:  specifically checking the value we place in content=[] & ttl value
-for more context, you can go through this thread [https://everlong.slack.com/archives/C02N42NDK8C/p1741298156644339]
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+
+Currently, two official plugins are available:
+
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+
+## Expanding the ESLint configuration
+
+If you are developing a production application, we recommend using TypeScript and enable type-aware lint rules. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
