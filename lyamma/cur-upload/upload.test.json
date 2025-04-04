@@ -1,0 +1,6 @@
+{
+  "body": {
+    "fileContent": "TW9jayBQYXJxdWV0IGZpbGUgY29udGVudCBiaW5hcnkgZGF0YQ==",
+    "roleARN": "arn:aws:iam::4343:role/RoleNameInAccountB"
+  }
+}
