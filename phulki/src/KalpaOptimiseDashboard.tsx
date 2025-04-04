@@ -413,7 +413,15 @@ export default function KalpaOptimiseDashboard() {
   );
 }
 
-function MetricCard({ title, value, trend, trendType, icon }) {
+interface MetricCardProps {
+  title: string;
+  value: string;
+  trend: string;
+  trendType: "positive" | "negative" | "neutral";
+  icon: React.ReactNode;
+}
+
+function MetricCard({ title, value, trend, trendType, icon }: MetricCardProps) {
   return (
     <Card>
       <CardHeader className="flex flex-row items-center justify-between pb-2">
@@ -438,7 +446,13 @@ function MetricCard({ title, value, trend, trendType, icon }) {
   );
 }
 
-function PricingModelItem({ label, value, cost }) {
+interface PricingModelItemProps {
+  label: string;
+  value: number;
+  cost: string;
+}
+
+function PricingModelItem({ label, value, cost }: PricingModelItemProps) {
   return (
     <div className="space-y-2">
       <div className="flex items-center justify-between">
@@ -453,7 +467,19 @@ function PricingModelItem({ label, value, cost }) {
   );
 }
 
-function RecommendationItem({ title, description, savings, impact, category }) {
+function RecommendationItem({
+  title,
+  description,
+  savings,
+  impact,
+  category
+}: {
+  title: string;
+  description: string;
+  savings: string;
+  impact: "High" | "Medium" | "Low";
+  category: string;
+}) {
   return (
     <div className="space-y-2 rounded-lg border p-4">
       <div className="flex items-start justify-between">
@@ -484,7 +510,21 @@ function RecommendationItem({ title, description, savings, impact, category }) {
   );
 }
 
-function SavingsPlanItem({ type, term, commitment, savings, roi }) {
+interface SavingsPlanItemProps {
+  type: string;
+  term: string;
+  commitment: string;
+  savings: string;
+  roi: string;
+}
+
+function SavingsPlanItem({
+  type,
+  term,
+  commitment,
+  savings,
+  roi
+}: SavingsPlanItemProps) {
   return (
     <div className="space-y-2 rounded-lg border p-4">
       <div className="flex items-start justify-between">
@@ -507,7 +547,14 @@ function SavingsPlanItem({ type, term, commitment, savings, roi }) {
   );
 }
 
-function ReportItem({ title, description, date, type }) {
+interface ReportItemProps {
+  title: string;
+  description: string;
+  date: string;
+  type: string;
+}
+
+function ReportItem({ title, description, date, type }: ReportItemProps) {
   return (
     <div className="flex items-center justify-between rounded-lg border p-4">
       <div className="space-y-1">

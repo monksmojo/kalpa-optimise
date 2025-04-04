@@ -60,7 +60,15 @@ import {
   CollapsibleTrigger
 } from "@/components/ui/collapsible";
 
-function MetricCard({ title, value, trend, trendType, icon }) {
+interface MetricCardProps {
+  title: string;
+  value: string;
+  trend: string;
+  trendType: "positive" | "negative" | "neutral";
+  icon: React.ReactNode;
+}
+
+function MetricCard({ title, value, trend, trendType, icon }: MetricCardProps) {
   return (
     <Card>
       <CardHeader className="flex flex-row items-center justify-between pb-2">
@@ -85,6 +93,19 @@ function MetricCard({ title, value, trend, trendType, icon }) {
   );
 }
 
+interface EC2InstanceRecommendationProps {
+  id: string;
+  type: string;
+  region: string;
+  pricing: string;
+  cpuUtilization: number;
+  memoryUtilization: number;
+  uptime: string;
+  recommendation: string;
+  savings: string;
+  impact: "High" | "Medium" | "Low";
+}
+
 function EC2InstanceRecommendation({
   id,
   type,
@@ -96,7 +117,7 @@ function EC2InstanceRecommendation({
   recommendation,
   savings,
   impact
-}) {
+}: EC2InstanceRecommendationProps) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -181,7 +202,21 @@ function EC2InstanceRecommendation({
   );
 }
 
-function SavingsOpportunity({ title, description, savings, instances, icon }) {
+interface SavingsOpportunityProps {
+  title: string;
+  description: string;
+  savings: string;
+  instances: number;
+  icon: React.ReactNode;
+}
+
+function SavingsOpportunity({
+  title,
+  description,
+  savings,
+  instances,
+  icon
+}: SavingsOpportunityProps) {
   return (
     <div className="rounded-lg border p-4">
       <div className="flex items-start gap-4">
@@ -636,12 +671,10 @@ export default function EC2OptimizationDashboard() {
                       </CardDescription>
                     </div>
                     <div className="flex items-center gap-2">
+                      <Search className="h-4 w-4 text-muted-foreground" />
                       <Input
                         placeholder="Search instances..."
                         className="w-64"
-                        prefix={
-                          <Search className="h-4 w-4 text-muted-foreground" />
-                        }
                       />
                     </div>
                   </div>

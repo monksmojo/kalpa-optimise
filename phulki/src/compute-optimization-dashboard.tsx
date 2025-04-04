@@ -40,7 +40,13 @@ import {
   CollapsibleTrigger
 } from "@/components/ui/collapsible";
 
-function MetricCard({ title, value, icon }) {
+interface MetricCardProps {
+  title: string;
+  value: string | number;
+  icon: React.ReactNode;
+}
+
+function MetricCard({ title, value, icon }: MetricCardProps) {
   return (
     <Card>
       <CardHeader className="flex flex-row items-center justify-between pb-2">
@@ -52,6 +58,20 @@ function MetricCard({ title, value, icon }) {
       </CardContent>
     </Card>
   );
+}
+
+interface ComputeInstanceRecommendationProps {
+  id: string;
+  type: string;
+  service: string;
+  region: string;
+  pricing: string;
+  cpuUtilization: number;
+  memoryUtilization: number;
+  uptime: string;
+  recommendation: string;
+  savings: string;
+  impact: string;
 }
 
 function ComputeInstanceRecommendation({
@@ -66,7 +86,7 @@ function ComputeInstanceRecommendation({
   recommendation,
   savings,
   impact
-}) {
+}: ComputeInstanceRecommendationProps) {
   const [isOpen, setIsOpen] = useState(false);
 
   const serviceIcon =
@@ -80,7 +100,7 @@ function ComputeInstanceRecommendation({
 
   // Sample historical utilization data for demo
   const cpuHistory = [12, 15, 10, 18, 14, 11, 13, 9, 12, 16, 14, 12];
-  const memoryHistory = [18, 22, 19, 25, 20, 17, 19, 16, 18, 21, 19, 18];
+  // const memoryHistory = [18, 22, 19, 25, 20, 17, 19, 16, 18, 21, 19, 18];
 
   // For right-sizing recommendations, show comparison data
   const showComparison =
@@ -318,7 +338,21 @@ function ComputeInstanceRecommendation({
   );
 }
 
-function SavingsOpportunity({ title, description, savings, instances, icon }) {
+interface SavingsOpportunityProps {
+  title: string;
+  description: string;
+  savings: string;
+  instances: number;
+  icon: React.ReactNode;
+}
+
+function SavingsOpportunity({
+  title,
+  description,
+  savings,
+  instances,
+  icon
+}: SavingsOpportunityProps) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -1182,13 +1216,8 @@ export default function ComputeOptimizationDashboard() {
                   </CardDescription>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Input
-                    placeholder="Search instances..."
-                    className="w-64"
-                    prefix={
-                      <Search className="h-4 w-4 text-muted-foreground" />
-                    }
-                  />
+                  <Search className="h-4 w-4 text-muted-foreground" />
+                  <Input placeholder="Search instances..." className="w-64" />
                 </div>
               </div>
             </CardHeader>
