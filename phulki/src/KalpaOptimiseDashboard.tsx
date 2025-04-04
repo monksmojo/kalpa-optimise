@@ -1,5 +1,4 @@
-import { useState } from "react";
-
+import { useState, FormEvent, ChangeEvent } from "react";
 import {
   BarChart,
   CloudCog,
@@ -9,7 +8,8 @@ import {
   PieChart,
   Settings,
   TrendingDown,
-  Upload
+  Upload,
+  Loader,
 } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
@@ -20,7 +20,7 @@ import {
   CardDescription,
   CardFooter,
   CardHeader,
-  CardTitle
+  CardTitle,
 } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -37,17 +37,91 @@ import {
   SidebarGroupLabel,
   SidebarGroupContent,
   SidebarTrigger,
-  SidebarSeparator
+  SidebarSeparator,
 } from "@/components/ui/sidebar";
 import { lineChartData } from "./components/charts/lineChartData";
 import { LineChartPhulki } from "./components/charts/LineChart";
+import { Input } from "./components/ui/input";
 
 export default function KalpaOptimiseDashboard() {
   const [activeTab, setActiveTab] = useState("uploadCUR");
+  
+  // Form state variables
+  const [roleArn, setRoleArn] = useState<string>('');
+  const [file, setFile] = useState<File | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const [error, setError] = useState<string>('');
+
+  // Handle role ARN input change
+  const handleArnChange = (e: ChangeEvent<HTMLInputElement>): void => {
+    setRoleArn(e.target.value);
+  };
+
+  // Handle file input change
+  const handleFileChange = (e: ChangeEvent<HTMLInputElement>): void => {
+    const selectedFile = e.target.files?.[0];
+    
+    if (selectedFile && selectedFile.name.endsWith('.parquet')) {
+      setFile(selectedFile);
+      setError('');
+    } else if (selectedFile) {
+      e.target.value = '';
+      setFile(null);
+      setError('Please upload only Parquet files');
+    }
+  };
+
+  // Handle form submission
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
+    e.preventDefault();
+    
+    if (!roleArn.trim() || !file) {
+      setError('Please provide both Role ARN and a Parquet file');
+      return;
+    }
+    
+    setIsSubmitting(true);
+    setError('');
+    
+    const formData = new FormData();
+    formData.append('roleArn', roleArn);
+    formData.append('curFile', file);
+    
+    try {
+      const response = await fetch('https://cusatad2yy5avtvs7tauul5h4e0hzcbz.lambda-url.us-east-1.on.aws/', {
+        method: 'POST',
+        body: formData,
+      });
+      
+      const data: { success: boolean; analysisId?: string; message?: string } = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(data.message || 'Failed to upload data');
+      }
+      
+      // Handle successful upload
+      console.log('Upload successful:', data);
+      
+      // Automatically switch to overview tab on success
+      setActiveTab('overview');
+      
+      // Clear form
+      setRoleArn('');
+      setFile(null);
+      const fileInput = document.getElementById('curFile') as HTMLInputElement;
+      if (fileInput) fileInput.value = '';
+      
+    } catch (err) {
+      console.error('Error uploading data:', err);
+      setError(err instanceof Error ? err.message : 'An error occurred while uploading. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <SidebarProvider>
-      <div className="flex min-h-screen bg-muted/30">
+      <div className="flex min-h-screen w-full bg-muted/30">
         <Sidebar>
           <SidebarHeader className="flex items-center gap-2 px-4 py-2">
             <CloudCog className="h-6 w-6 text-emerald-600" />
@@ -100,18 +174,14 @@ export default function KalpaOptimiseDashboard() {
           </SidebarFooter>
         </Sidebar>
 
-        <div className="flex-1 overflow-auto">
-          <header className="sticky top-0 z-10 flex h-16 items-center gap-4 border-b bg-background px-6">
+        <div className="flex-1 overflow-auto w-full">
+          <header className="sticky top-0 z-10 flex h-16 items-center gap-4 border-b bg-background px-6 w-full">
             <SidebarTrigger />
             <div className="flex-1">
               <h1 className="text-lg font-semibold">
                 AWS Cost Optimisation Dashboard
               </h1>
             </div>
-            <Button variant="outline" size="sm">
-              <Upload className="mr-2 h-4 w-4" />
-              Upload New CUR
-            </Button>
           </header>
 
           <main className="container mx-auto p-4 md:p-6">
@@ -120,13 +190,78 @@ export default function KalpaOptimiseDashboard() {
               onValueChange={setActiveTab}
               className="space-y-4"
             >
-              <TabsList className="grid w-full grid-cols-3">
-                <TabsTrigger value="overview">Overview</TabsTrigger>
-                <TabsTrigger value="recommendations">
-                  Recommendations
-                </TabsTrigger>
-              </TabsList>
+              {activeTab !== "uploadCUR" && (
+                <TabsList className="grid w-full grid-cols-2">
+                  <TabsTrigger value="overview">Overview</TabsTrigger>
+                  <TabsTrigger value="recommendations">
+                    Recommendations
+                  </TabsTrigger>
+                </TabsList>
+              )}
 
+              <TabsContent value="uploadCUR">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Upload Cost & Usage Report</CardTitle>
+                    <CardDescription>
+                      Provide your AWS Role ARN and upload your CUR file for
+                      analysis
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <form className="space-y-4" onSubmit={handleSubmit} encType="multipart/form-data" >
+                      <div className="space-y-2">
+                        <Input
+                          className="w-full"
+                          id="roleArn"
+                          placeholder="arn:aws:iam::123456789012:role/example-role"
+                          value={roleArn}
+                          onChange={handleArnChange}
+                          required
+                        />
+                        <p className="text-sm text-muted-foreground flex">
+                          The Role ARN with permissions to cloudwatch data from
+                          your AWS Account
+                        </p>
+                      </div>
+
+                      <div className="flex gap-5">
+                        <div className="space-y-2">
+                          <div className="grid w-full max-w-sm items-center gap-1.5">
+                            <Input 
+                              id="curFile"
+                              type="file"
+                              accept=".parquet"
+                              onChange={handleFileChange}
+                              required
+                            />
+                            <p className="text-sm text-muted-foreground flex">
+                              Upload your AWS Cost & Usage Report (Parquet format)
+                            </p>
+                          </div>
+                        </div>
+
+                        <Button type="submit" disabled={isSubmitting}>
+                          {isSubmitting ? (
+                            <>
+                              <Loader className="mr-2 h-4 w-4 animate-spin" />
+                              Processing...
+                            </>
+                          ) : (
+                            <>
+                              <Upload className="mr-2 h-4 w-4" />
+                              Upload and Analyze
+                            </>
+                          )}
+                        </Button>
+                      </div>
+                      {error && <p className="text-sm text-red-500">{error}</p>}
+                    </form>
+                  </CardContent>
+                </Card>
+              </TabsContent>
+
+              {/* Rest of your code remains unchanged */}
               <TabsContent value="overview" className="space-y-4">
                 <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
                   <MetricCard
@@ -346,6 +481,7 @@ export default function KalpaOptimiseDashboard() {
   );
 }
 
+// Your existing components remain the same
 interface MetricCardProps {
   title: string;
   value: string;
@@ -379,6 +515,7 @@ function MetricCard({ title, value, trend, trendType, icon }: MetricCardProps) {
   );
 }
 
+// Other component definitions remain unchanged...
 interface PricingModelItemProps {
   label: string;
   value: number;
@@ -405,7 +542,7 @@ function RecommendationItem({
   description,
   savings,
   impact,
-  category
+  category,
 }: {
   title: string;
   description: string;
@@ -456,7 +593,7 @@ function SavingsPlanItem({
   term,
   commitment,
   savings,
-  roi
+  roi,
 }: SavingsPlanItemProps) {
   return (
     <div className="space-y-2 rounded-lg border p-4">
