@@ -29,14 +29,7 @@ const chartConfig = {
 interface LineChartPhulkiProps {
   title: string;
   description: string;
-  data: {
-    id: string;
-    type: string;
-    service: string;
-    cpu: number;
-    memory: number;
-    hourlyHistory: { Hour: string; MeanUtilization: number }[];
-  }[];
+  data: { Hour: string; MeanCPUUtilization: number }[];
 }
 
 export function LineChartPhulki({
@@ -57,7 +50,7 @@ export function LineChartPhulki({
           config={chartConfig}
           className="aspect-auto h-[250px] w-full"
         >
-          <AreaChart data={data[0].hourlyHistory}>
+          <AreaChart data={data}>
             <defs>
               <linearGradient id="fillCPU" x1="0" y1="0" x2="0" y2="1">
                 <stop

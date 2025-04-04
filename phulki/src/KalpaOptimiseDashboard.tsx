@@ -40,12 +40,19 @@ import {
   SidebarTrigger,
   SidebarSeparator
 } from "@/components/ui/sidebar";
-import { LineChartPhulki } from "./components/charts/LineChart";
 import { utilizationData } from "./data/utilizationData";
 import { metricsData } from "@/data/metricsData";
+import { DialogUtilization } from "@/components/DialogUtilization";
 
 export default function KalpaOptimiseDashboard() {
   const [activeTab, setActiveTab] = useState("uploadCUR");
+  const [hourlyUtilization, setHourlyUtilization] = useState([
+    {
+      Hour: "",
+      MeanCPUUtilization: 0
+    }
+  ]);
+  const [openHourlyChart, setOpenHourlyChart] = useState(false);
 
   return (
     <SidebarProvider>
@@ -186,6 +193,12 @@ export default function KalpaOptimiseDashboard() {
                                     <div
                                       key={`cpu-${i}`}
                                       className={`flex flex-col items-center justify-center rounded-md ${bgColor} p-2 text-white`}
+                                      onClick={() => {
+                                        setOpenHourlyChart(true);
+                                        setHourlyUtilization(
+                                          instance.hourlyHistory
+                                        );
+                                      }}
                                     >
                                       <span className="text-xs font-bold">
                                         {instance.cpu}%
@@ -218,6 +231,11 @@ export default function KalpaOptimiseDashboard() {
                     </CardContent>
                   </Card>
                 </div>
+                <DialogUtilization
+                  utilizationHistory={hourlyUtilization}
+                  shouldOpen={openHourlyChart}
+                  setShouldOpen={setOpenHourlyChart}
+                />
                 <div className="grid gap-4 md:grid-cols-2">
                   <Card>
                     <CardHeader>
@@ -245,11 +263,6 @@ export default function KalpaOptimiseDashboard() {
                     </CardContent>
                   </Card>
                 </div>
-                <LineChartPhulki
-                  title="Cost Trend"
-                  description="Last 3 months spending"
-                  data={utilizationData}
-                />
 
                 <Card>
                   <CardHeader>
