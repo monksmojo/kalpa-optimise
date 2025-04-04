@@ -1,5 +1,5 @@
 import "./App.css";
-import KalpaOptimiseDashboard from "./KalpaOptimiseDashboard";
+import KalpaOptimiseDashboard from "@/KalpaOptimiseDashboard";
 
 function App() {
   return (
