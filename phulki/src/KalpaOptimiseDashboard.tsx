@@ -82,39 +82,67 @@ export default function KalpaOptimiseDashboard() {
     
     setIsSubmitting(true);
     setError('');
-    
-    const formData = new FormData();
-    formData.append('roleArn', roleArn);
-    formData.append('curFile', file);
-    
-    try {
-      const response = await fetch('https://cusatad2yy5avtvs7tauul5h4e0hzcbz.lambda-url.us-east-1.on.aws/', {
-        method: 'POST',
-        body: formData,
-      });
-      
-      const data: { success: boolean; analysisId?: string; message?: string } = await response.json();
-      
-      if (!response.ok) {
-        throw new Error(data.message || 'Failed to upload data');
+
+    try{
+      const getSignedUrlResponse = await fetch(`https://5ce9usd6he.execute-api.us-east-1.amazonaws.com/pre-signed-url?roleARN=${roleArn}`, {
+        method: 'GET'
+      }).then(response => response.json());
+      const signedUrl = getSignedUrlResponse.signedUrl;
+      if (!signedUrl) {
+        throw new Error('Failed to get signed URL');
       }
-      
-      // Handle successful upload
-      console.log('Upload successful:', data);
-      
-      // Automatically switch to overview tab on success
-      setActiveTab('overview');
-      
-      // Clear form
-      setRoleArn('');
-      setFile(null);
-      const fileInput = document.getElementById('curFile') as HTMLInputElement;
-      if (fileInput) fileInput.value = '';
-      
-    } catch (err) {
-      console.error('Error uploading data:', err);
-      setError(err instanceof Error ? err.message : 'An error occurred while uploading. Please try again.');
-    } finally {
+
+      try {
+        const requestBody = {
+          roleArn,
+        };
+        const response = await fetch('https://cusatad2yy5avtvs7tauul5h4e0hzcbz.lambda-url.us-east-1.on.aws/', {
+          method: 'POST',
+          body: JSON.stringify(requestBody),
+        });
+        
+        const data: { success: boolean; analysisId?: string; message?: string } = await response.json();
+        
+        if (!response.ok) {
+          throw new Error(data.message || 'Failed to upload data');
+        }
+        
+        console.log(file);
+        const uploadResponse = await fetch(signedUrl, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/vnd.apache.parquet',
+          },
+          body: file,
+        });
+  
+        if (!uploadResponse.ok) {
+          throw new Error('Failed to upload file to S3');
+        }
+        // Handle successful upload
+        console.log('Upload successful:', data);
+        
+        // Automatically switch to overview tab on success
+        setActiveTab('overview');
+        
+        // Clear form
+        setRoleArn('');
+        setFile(null);
+        const fileInput = document.getElementById('curFile') as HTMLInputElement;
+        if (fileInput) fileInput.value = '';
+        
+      } catch (err) {
+        console.error('Error uploading data:', err);
+        setError(err instanceof Error ? err.message : 'An error occurred while uploading. Please try again.');
+      } finally {
+        setIsSubmitting(false);
+      }
+    }
+    catch (error) {
+      console.error('Error uploading data:', error);
+      setError('Failed to upload data');
+    }
+    finally {
       setIsSubmitting(false);
     }
   };
@@ -209,7 +237,7 @@ export default function KalpaOptimiseDashboard() {
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <form className="space-y-4" onSubmit={handleSubmit} encType="multipart/form-data" >
+                    <form className="space-y-4" onSubmit={handleSubmit} >
                       <div className="space-y-2">
                         <Input
                           className="w-full"
