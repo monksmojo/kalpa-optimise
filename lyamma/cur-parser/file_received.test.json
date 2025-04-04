@@ -1,0 +1,38 @@
+{
+  "Records": [
+    {
+      "eventVersion": "2.1",
+      "eventSource": "aws:s3",
+      "awsRegion": "us-east-1",
+      "eventTime": "2025-04-04T13:48:55.558Z",
+      "eventName": "ObjectCreated:Put",
+      "userIdentity": {
+        "principalId": "AWS:AROAXRNJN743X5G4OF6JX:cur-upload"
+      },
+      "requestParameters": {
+        "sourceIPAddress": "54.172.56.232"
+      },
+      "responseElements": {
+        "x-amz-request-id": "TYTMNH66FSXD32X1",
+        "x-amz-id-2": "Bjgc1Os4aeHZ7JZF44koXpgUYSuaJ8tqhaaRc3dIEg66QAb9Z/BG2ifhsbVhlXYPTGH4ffWjgqVtJem+dZW5mWUnvaWDFV0e"
+      },
+      "s3": {
+        "s3SchemaVersion": "1.0",
+        "configurationId": "object-creation",
+        "bucket": {
+          "name": "kalpa-cur-reports",
+          "ownerIdentity": {
+            "principalId": "A2OS5KPZHA5G9I"
+          },
+          "arn": "arn:aws:s3:::kalpa-cur-reports"
+        },
+        "object": {
+          "key": "4343.parquet",
+          "size": 37,
+          "eTag": "2b5dd4ce06e74537734763d82eb31a9e",
+          "sequencer": "0067EFE3477B726189"
+        }
+      }
+    }
+  ]
+}
