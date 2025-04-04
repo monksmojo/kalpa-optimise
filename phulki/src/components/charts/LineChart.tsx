@@ -91,16 +91,12 @@ export function LineChartPhulki({
               axisLine={false}
               tickMargin={10}
               minTickGap={20}
-              // tickFormatter={(value) => {
-              //   value;
-              // }}
             />
             <ChartTooltip
               cursor={false}
               content={
                 <ChartTooltipContent
                   labelFormatter={(value) => {
-                    console.log("🚀 ~ value:", value);
                     return "Hour: " + value;
                   }}
                   indicator="dot"

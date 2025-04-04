@@ -100,7 +100,7 @@ export const utilizationData = [
       },
       {
         Hour: "23:00",
-        MeanCPUUtilization: 6.1858729530045435
+        MeanCPUUtilization: 56.18587295300454
       }
     ]
   },
@@ -113,7 +113,7 @@ export const utilizationData = [
     hourlyHistory: [
       {
         Hour: "0:00",
-        MeanCPUUtilization: 3.031377092968584
+        MeanCPUUtilization: 70.031377092968
       },
       {
         Hour: "1:00",
