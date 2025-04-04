@@ -11,7 +11,6 @@ import {
   CpuIcon,
   DollarSign,
   Download,
-  FileText,
   HelpCircle,
   RefreshCw,
   Search,
@@ -262,12 +261,6 @@ export default function EC2OptimizationDashboard() {
                     <SidebarMenuButton isActive={true}>
                       <Server className="h-4 w-4" />
                       <span>EC2 Dashboard</span>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                  <SidebarMenuItem>
-                    <SidebarMenuButton>
-                      <FileText className="h-4 w-4" />
-                      <span>Reports</span>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                   <SidebarMenuItem>
