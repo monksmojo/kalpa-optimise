@@ -40,6 +40,8 @@ import {
   SidebarTrigger,
   SidebarSeparator
 } from "@/components/ui/sidebar";
+import { lineChartData } from "./components/charts/lineChartData";
+import { LineChartPhulki } from "./components/charts/LineChart";
 
 export default function KalpaOptimiseDashboard() {
   const [activeTab, setActiveTab] = useState("overview");
@@ -199,6 +201,11 @@ export default function KalpaOptimiseDashboard() {
                     </CardContent>
                   </Card>
                 </div>
+                <LineChartPhulki
+                  title="Cost Trend"
+                  description="Last 3 months spending"
+                  data={lineChartData}
+                />
 
                 <Card>
                   <CardHeader>
@@ -484,33 +491,6 @@ function SavingsPlanItem({
           <Button size="sm">Purchase</Button>
         </div>
       </div>
-    </div>
-  );
-}
-
-interface ReportItemProps {
-  title: string;
-  description: string;
-  date: string;
-  type: string;
-}
-
-function ReportItem({ title, description, date, type }: ReportItemProps) {
-  return (
-    <div className="flex items-center justify-between rounded-lg border p-4">
-      <div className="space-y-1">
-        <h3 className="font-medium">{title}</h3>
-        <p className="text-sm text-muted-foreground">{description}</p>
-        <div className="flex items-center gap-2 text-xs text-muted-foreground">
-          <span>{date}</span>
-          <span>•</span>
-          <span>{type}</span>
-        </div>
-      </div>
-      <Button variant="outline" size="sm">
-        <Download className="mr-2 h-4 w-4" />
-        Download
-      </Button>
     </div>
   );
 }
