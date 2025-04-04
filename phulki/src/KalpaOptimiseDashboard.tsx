@@ -9,8 +9,7 @@ import {
   PieChart,
   Settings,
   TrendingDown,
-  Upload,
-  Users
+  Upload
 } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
@@ -44,7 +43,7 @@ import { lineChartData } from "./components/charts/lineChartData";
 import { LineChartPhulki } from "./components/charts/LineChart";
 
 export default function KalpaOptimiseDashboard() {
-  const [activeTab, setActiveTab] = useState("overview");
+  const [activeTab, setActiveTab] = useState("uploadCUR");
 
   return (
     <SidebarProvider>
@@ -56,55 +55,41 @@ export default function KalpaOptimiseDashboard() {
           </SidebarHeader>
           <SidebarSeparator />
           <SidebarContent>
-            <SidebarGroup>
-              <SidebarGroupLabel>Dashboard</SidebarGroupLabel>
-              <SidebarGroupContent>
-                <SidebarMenu>
-                  <SidebarMenuItem>
-                    <SidebarMenuButton
-                      isActive={activeTab === "overview"}
-                      onClick={() => setActiveTab("overview")}
-                    >
-                      <LineChart className="h-4 w-4" />
-                      <span>Overview</span>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                  <SidebarMenuItem>
-                    <SidebarMenuButton
-                      onClick={() => setActiveTab("recommendations")}
-                    >
-                      <TrendingDown className="h-4 w-4" />
-                      <span>Recommendations</span>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                </SidebarMenu>
-              </SidebarGroupContent>
-            </SidebarGroup>
             <SidebarSeparator />
             <SidebarGroup>
-              <SidebarGroupLabel>Management</SidebarGroupLabel>
-              <SidebarGroupContent>
-                <SidebarMenu>
-                  <SidebarMenuItem>
-                    <SidebarMenuButton>
-                      <Upload className="h-4 w-4" />
-                      <span>Upload CUR</span>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                  <SidebarMenuItem>
-                    <SidebarMenuButton>
-                      <Settings className="h-4 w-4" />
-                      <span>Settings</span>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                  <SidebarMenuItem>
-                    <SidebarMenuButton>
-                      <Users className="h-4 w-4" />
-                      <span>Team Access</span>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                </SidebarMenu>
-              </SidebarGroupContent>
+              <SidebarGroup>
+                <SidebarGroupLabel>Dashboard</SidebarGroupLabel>
+                <SidebarGroupContent>
+                  <SidebarMenu>
+                    <SidebarMenuItem>
+                      <SidebarMenuButton
+                        isActive={activeTab === "uploadCUR"}
+                        onClick={() => setActiveTab("uploadCUR")}
+                      >
+                        <Upload className="h-4 w-4" />
+                        <span>Upload CUR</span>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                    <SidebarMenuItem>
+                      <SidebarMenuButton
+                        isActive={activeTab === "overview"}
+                        onClick={() => setActiveTab("overview")}
+                      >
+                        <LineChart className="h-4 w-4" />
+                        <span>Overview</span>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                    <SidebarMenuItem>
+                      <SidebarMenuButton
+                        onClick={() => setActiveTab("recommendations")}
+                      >
+                        <TrendingDown className="h-4 w-4" />
+                        <span>Recommendations</span>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  </SidebarMenu>
+                </SidebarGroupContent>
+              </SidebarGroup>
             </SidebarGroup>
           </SidebarContent>
           <SidebarFooter className="p-4">
