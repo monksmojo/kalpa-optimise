@@ -9,8 +9,7 @@ import {
   PieChart,
   Settings,
   TrendingDown,
-  Upload,
-  Users
+  Upload
 } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
@@ -40,9 +39,11 @@ import {
   SidebarTrigger,
   SidebarSeparator
 } from "@/components/ui/sidebar";
+import { lineChartData } from "./components/charts/lineChartData";
+import { LineChartPhulki } from "./components/charts/LineChart";
 
 export default function KalpaOptimiseDashboard() {
-  const [activeTab, setActiveTab] = useState("overview");
+  const [activeTab, setActiveTab] = useState("uploadCUR");
 
   return (
     <SidebarProvider>
@@ -54,55 +55,41 @@ export default function KalpaOptimiseDashboard() {
           </SidebarHeader>
           <SidebarSeparator />
           <SidebarContent>
-            <SidebarGroup>
-              <SidebarGroupLabel>Dashboard</SidebarGroupLabel>
-              <SidebarGroupContent>
-                <SidebarMenu>
-                  <SidebarMenuItem>
-                    <SidebarMenuButton
-                      isActive={activeTab === "overview"}
-                      onClick={() => setActiveTab("overview")}
-                    >
-                      <LineChart className="h-4 w-4" />
-                      <span>Overview</span>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                  <SidebarMenuItem>
-                    <SidebarMenuButton
-                      onClick={() => setActiveTab("recommendations")}
-                    >
-                      <TrendingDown className="h-4 w-4" />
-                      <span>Recommendations</span>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                </SidebarMenu>
-              </SidebarGroupContent>
-            </SidebarGroup>
             <SidebarSeparator />
             <SidebarGroup>
-              <SidebarGroupLabel>Management</SidebarGroupLabel>
-              <SidebarGroupContent>
-                <SidebarMenu>
-                  <SidebarMenuItem>
-                    <SidebarMenuButton>
-                      <Upload className="h-4 w-4" />
-                      <span>Upload CUR</span>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                  <SidebarMenuItem>
-                    <SidebarMenuButton>
-                      <Settings className="h-4 w-4" />
-                      <span>Settings</span>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                  <SidebarMenuItem>
-                    <SidebarMenuButton>
-                      <Users className="h-4 w-4" />
-                      <span>Team Access</span>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                </SidebarMenu>
-              </SidebarGroupContent>
+              <SidebarGroup>
+                <SidebarGroupLabel>Dashboard</SidebarGroupLabel>
+                <SidebarGroupContent>
+                  <SidebarMenu>
+                    <SidebarMenuItem>
+                      <SidebarMenuButton
+                        isActive={activeTab === "uploadCUR"}
+                        onClick={() => setActiveTab("uploadCUR")}
+                      >
+                        <Upload className="h-4 w-4" />
+                        <span>Upload CUR</span>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                    <SidebarMenuItem>
+                      <SidebarMenuButton
+                        isActive={activeTab === "overview"}
+                        onClick={() => setActiveTab("overview")}
+                      >
+                        <LineChart className="h-4 w-4" />
+                        <span>Overview</span>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                    <SidebarMenuItem>
+                      <SidebarMenuButton
+                        onClick={() => setActiveTab("recommendations")}
+                      >
+                        <TrendingDown className="h-4 w-4" />
+                        <span>Recommendations</span>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  </SidebarMenu>
+                </SidebarGroupContent>
+              </SidebarGroup>
             </SidebarGroup>
           </SidebarContent>
           <SidebarFooter className="p-4">
@@ -199,6 +186,11 @@ export default function KalpaOptimiseDashboard() {
                     </CardContent>
                   </Card>
                 </div>
+                <LineChartPhulki
+                  title="Cost Trend"
+                  description="Last 3 months spending"
+                  data={lineChartData}
+                />
 
                 <Card>
                   <CardHeader>
@@ -484,33 +476,6 @@ function SavingsPlanItem({
           <Button size="sm">Purchase</Button>
         </div>
       </div>
-    </div>
-  );
-}
-
-interface ReportItemProps {
-  title: string;
-  description: string;
-  date: string;
-  type: string;
-}
-
-function ReportItem({ title, description, date, type }: ReportItemProps) {
-  return (
-    <div className="flex items-center justify-between rounded-lg border p-4">
-      <div className="space-y-1">
-        <h3 className="font-medium">{title}</h3>
-        <p className="text-sm text-muted-foreground">{description}</p>
-        <div className="flex items-center gap-2 text-xs text-muted-foreground">
-          <span>{date}</span>
-          <span>•</span>
-          <span>{type}</span>
-        </div>
-      </div>
-      <Button variant="outline" size="sm">
-        <Download className="mr-2 h-4 w-4" />
-        Download
-      </Button>
     </div>
   );
 }
