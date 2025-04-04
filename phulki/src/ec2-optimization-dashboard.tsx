@@ -266,12 +266,6 @@ export default function EC2OptimizationDashboard() {
                   </SidebarMenuItem>
                   <SidebarMenuItem>
                     <SidebarMenuButton>
-                      <FileText className="h-4 w-4" />
-                      <span>Reports</span>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                  <SidebarMenuItem>
-                    <SidebarMenuButton>
                       <Settings className="h-4 w-4" />
                       <span>Settings</span>
                     </SidebarMenuButton>

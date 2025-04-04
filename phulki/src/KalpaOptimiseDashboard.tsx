@@ -76,12 +76,6 @@ export default function KalpaOptimiseDashboard() {
                       <span>Recommendations</span>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
-                  <SidebarMenuItem>
-                    <SidebarMenuButton onClick={() => setActiveTab("reports")}>
-                      <FileText className="h-4 w-4" />
-                      <span>Reports</span>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
                 </SidebarMenu>
               </SidebarGroupContent>
             </SidebarGroup>
@@ -145,7 +139,6 @@ export default function KalpaOptimiseDashboard() {
                 <TabsTrigger value="recommendations">
                   Recommendations
                 </TabsTrigger>
-                <TabsTrigger value="reports">Reports</TabsTrigger>
               </TabsList>
 
               <TabsContent value="overview" className="space-y-4">
@@ -352,57 +345,6 @@ export default function KalpaOptimiseDashboard() {
                       />
                     </div>
                   </CardContent>
-                </Card>
-              </TabsContent>
-
-              <TabsContent value="reports" className="space-y-4">
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Cost Optimization Reports</CardTitle>
-                    <CardDescription>
-                      Historical and projected cost analysis
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-4">
-                      <ReportItem
-                        title="March 2025 Cost Analysis"
-                        description="Complete breakdown of AWS costs with optimization opportunities"
-                        date="April 2, 2025"
-                        type="Monthly Analysis"
-                      />
-                      <ReportItem
-                        title="Q1 2025 Cost Trends"
-                        description="Quarterly analysis of spending patterns and recommendations"
-                        date="April 1, 2025"
-                        type="Quarterly Report"
-                      />
-                      <ReportItem
-                        title="Reserved Instance Utilization"
-                        description="Analysis of current RI usage and optimization opportunities"
-                        date="March 28, 2025"
-                        type="Specialized Report"
-                      />
-                      <ReportItem
-                        title="Compute Resource Efficiency"
-                        description="EC2 and container service utilization analysis"
-                        date="March 25, 2025"
-                        type="Specialized Report"
-                      />
-                      <ReportItem
-                        title="February 2025 Cost Analysis"
-                        description="Complete breakdown of AWS costs with optimization opportunities"
-                        date="March 3, 2025"
-                        type="Monthly Analysis"
-                      />
-                    </div>
-                  </CardContent>
-                  <CardFooter>
-                    <Button variant="outline" className="w-full">
-                      <Download className="mr-2 h-4 w-4" />
-                      Export All Reports
-                    </Button>
-                  </CardFooter>
                 </Card>
               </TabsContent>
             </Tabs>
