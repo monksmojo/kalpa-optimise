@@ -2,12 +2,13 @@ import { useState } from "react";
 
 import {
   BarChart,
+  Check,
   CloudCog,
+  CpuIcon,
   DollarSign,
   Download,
   LineChart,
   PieChart,
-  Settings,
   TrendingDown,
   Upload
 } from "lucide-react";
@@ -39,8 +40,9 @@ import {
   SidebarTrigger,
   SidebarSeparator
 } from "@/components/ui/sidebar";
-import { lineChartData } from "./components/charts/lineChartData";
 import { LineChartPhulki } from "./components/charts/LineChart";
+import { utilizationData } from "./data/utilizationData";
+import { metricsData } from "@/data/metricsData";
 
 export default function KalpaOptimiseDashboard() {
   const [activeTab, setActiveTab] = useState("uploadCUR");
@@ -130,35 +132,92 @@ export default function KalpaOptimiseDashboard() {
               <TabsContent value="overview" className="space-y-4">
                 <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
                   <MetricCard
-                    title="Current Monthly Cost"
-                    value="$12,450"
-                    trend="+8%"
-                    trendType="negative"
-                    icon={<DollarSign className="h-4 w-4" />}
+                    title="Total Compute Instances"
+                    value={metricsData.totalComputeInstance}
+                    icon={<CpuIcon className="h-4 w-4" />}
+                  />
+                  <MetricCard
+                    title="Active RIs"
+                    value={metricsData.activeRI}
+                    icon={<Check className="h-4 w-4" />}
+                  />
+                  <MetricCard
+                    title="RI Utilization"
+                    value={metricsData.riUtilization}
+                    icon={<BarChart className="h-4 w-4" />}
                   />
                   <MetricCard
                     title="Potential Savings"
-                    value="$3,280"
-                    trend="26%"
-                    trendType="positive"
-                    icon={<TrendingDown className="h-4 w-4" />}
-                  />
-                  <MetricCard
-                    title="Optimized Cost"
-                    value="$9,170"
-                    trend="-26%"
-                    trendType="positive"
+                    value={metricsData.potentialSavings}
                     icon={<DollarSign className="h-4 w-4" />}
                   />
-                  <MetricCard
-                    title="Recommendations"
-                    value="14"
-                    trend="+2"
-                    trendType="neutral"
-                    icon={<Settings className="h-4 w-4" />}
-                  />
                 </div>
+                <div className="mt-6">
+                  <Card>
+                    <CardHeader>
+                      <CardTitle>Compute Utilization Analysis</CardTitle>
+                      <CardDescription>
+                        CPU and memory utilization across all compute instances
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-6">
+                        <div className="grid grid-cols-1 gap-6 md:grid-cols-1">
+                          <div>
+                            <h3 className="mb-4 text-sm font-medium">
+                              CPU Utilization
+                            </h3>
+                            <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+                              {utilizationData
+                                .slice(0, 8)
+                                .map((instance, i) => {
+                                  let bgColor;
+                                  if (instance.cpu < 20)
+                                    bgColor = "bg-rose-500";
+                                  else if (instance.cpu < 40)
+                                    bgColor = "bg-rose-300";
+                                  else if (instance.cpu < 60)
+                                    bgColor = "bg-amber-300";
+                                  else if (instance.cpu < 80)
+                                    bgColor = "bg-emerald-300";
+                                  else bgColor = "bg-emerald-500";
 
+                                  return (
+                                    <div
+                                      key={`cpu-${i}`}
+                                      className={`flex flex-col items-center justify-center rounded-md ${bgColor} p-2 text-white`}
+                                    >
+                                      <span className="text-xs font-bold">
+                                        {instance.cpu}%
+                                      </span>
+                                      <span className="text-xs truncate max-w-full">
+                                        {instance.id}
+                                      </span>
+                                      <span className="text-xs">
+                                        {instance.type}
+                                      </span>
+                                      <span className="text-xs opacity-80">
+                                        {instance.service}
+                                      </span>
+                                    </div>
+                                  );
+                                })}
+                            </div>
+                            <div className="mt-2 flex justify-between text-xs">
+                              <span className="text-rose-500">Low (0-20%)</span>
+                              <span className="text-amber-500">
+                                Medium (40-60%)
+                              </span>
+                              <span className="text-emerald-500">
+                                High (80-100%)
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </div>
                 <div className="grid gap-4 md:grid-cols-2">
                   <Card>
                     <CardHeader>
@@ -189,7 +248,7 @@ export default function KalpaOptimiseDashboard() {
                 <LineChartPhulki
                   title="Cost Trend"
                   description="Last 3 months spending"
-                  data={lineChartData}
+                  data={utilizationData}
                 />
 
                 <Card>
@@ -348,9 +407,9 @@ export default function KalpaOptimiseDashboard() {
 
 interface MetricCardProps {
   title: string;
-  value: string;
-  trend: string;
-  trendType: "positive" | "negative" | "neutral";
+  value: string | number;
+  trend?: string;
+  trendType?: "positive" | "negative" | "neutral";
   icon: React.ReactNode;
 }
 

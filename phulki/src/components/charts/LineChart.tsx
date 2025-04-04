@@ -1,5 +1,4 @@
 "use client";
-import * as React from "react";
 import { Area, AreaChart, CartesianGrid, XAxis } from "recharts";
 import {
   Card,
@@ -16,13 +15,6 @@ import {
   ChartTooltip,
   ChartTooltipContent
 } from "@/components/ui/chart";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue
-} from "@/components/ui/select";
 
 const chartConfig = {
   visitors: {
@@ -34,31 +26,24 @@ const chartConfig = {
   }
 } satisfies ChartConfig;
 
-interface LineChartProps {
+interface LineChartPhulkiProps {
   title: string;
   description: string;
-  data: { date: string; cpuPercent: number }[];
+  data: {
+    id: string;
+    type: string;
+    service: string;
+    cpu: number;
+    memory: number;
+    hourlyHistory: { Hour: string; MeanUtilization: number }[];
+  }[];
 }
 
 export function LineChartPhulki({
   title,
   description,
   data = []
-}: LineChartProps) {
-  const [timeRange, setTimeRange] = React.useState("90d");
-  const filteredData = data.filter((item) => {
-    const date = new Date(item.date);
-    const referenceDate = new Date("2024-06-30");
-    let daysToSubtract = 90;
-    if (timeRange === "30d") {
-      daysToSubtract = 30;
-    } else if (timeRange === "7d") {
-      daysToSubtract = 7;
-    }
-    const startDate = new Date(referenceDate);
-    startDate.setDate(startDate.getDate() - daysToSubtract);
-    return date >= startDate;
-  });
+}: LineChartPhulkiProps) {
   return (
     <Card>
       <CardHeader className="flex items-center gap-2 space-y-0 border-b py-5 sm:flex-row">
@@ -66,32 +51,13 @@ export function LineChartPhulki({
           <CardTitle>{title}</CardTitle>
           <CardDescription>{description}</CardDescription>
         </div>
-        <Select value={timeRange} onValueChange={setTimeRange}>
-          <SelectTrigger
-            className="w-[160px] rounded-lg sm:ml-auto"
-            aria-label="Select a value"
-          >
-            <SelectValue placeholder="Last 3 months" />
-          </SelectTrigger>
-          <SelectContent className="rounded-xl">
-            <SelectItem value="90d" className="rounded-lg">
-              Last 3 months
-            </SelectItem>
-            <SelectItem value="30d" className="rounded-lg">
-              Last 30 days
-            </SelectItem>
-            <SelectItem value="7d" className="rounded-lg">
-              Last 7 days
-            </SelectItem>
-          </SelectContent>
-        </Select>
       </CardHeader>
       <CardContent className="px-2 pt-4 sm:px-6 sm:pt-6">
         <ChartContainer
           config={chartConfig}
           className="aspect-auto h-[250px] w-full"
         >
-          <AreaChart data={filteredData}>
+          <AreaChart data={data[0].hourlyHistory}>
             <defs>
               <linearGradient id="fillCPU" x1="0" y1="0" x2="0" y2="1">
                 <stop
@@ -120,42 +86,30 @@ export function LineChartPhulki({
             </defs>
             <CartesianGrid vertical={false} />
             <XAxis
-              dataKey="date"
+              dataKey="Hour"
               tickLine={false}
               axisLine={false}
-              tickMargin={8}
-              minTickGap={32}
-              tickFormatter={(value) => {
-                const date = new Date(value);
-                return date.toLocaleDateString("en-US", {
-                  month: "short",
-                  day: "numeric"
-                });
-              }}
+              tickMargin={10}
+              minTickGap={20}
+              // tickFormatter={(value) => {
+              //   value;
+              // }}
             />
             <ChartTooltip
               cursor={false}
               content={
                 <ChartTooltipContent
                   labelFormatter={(value) => {
-                    return new Date(value).toLocaleDateString("en-US", {
-                      month: "short",
-                      day: "numeric"
-                    });
+                    console.log("🚀 ~ value:", value);
+                    return "Hour: " + value;
                   }}
                   indicator="dot"
                 />
               }
             />
+
             <Area
-              dataKey="mobile"
-              type="natural"
-              fill="url(#fillMobile)"
-              stroke="var(--color-mobile)"
-              stackId="a"
-            />
-            <Area
-              dataKey="cpuPercent"
+              dataKey="MeanCPUUtilization"
               type="natural"
               fill="url(#fillCPU)"
               stroke="var(--color-cpuPercent)"
