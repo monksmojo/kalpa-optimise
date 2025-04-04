@@ -1,8 +1,8 @@
-import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
+import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
+import { PutCommand, DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb";
 
-const s3 = new S3Client({ region: "us-east-1" });
-
-const BUCKET_NAME = "kalpa-cur-reports";
+const client = new DynamoDBClient({ region: 'us-east-1' });
+const docClient = DynamoDBDocumentClient.from(client);
 
 function getAccountIdFromArn(arn) {
   const regex = /arn:aws:iam::(\d+):/;
@@ -16,36 +16,41 @@ function getAccountIdFromArn(arn) {
 
 export const handler = async (event) => {
   try {
-    const { fileContent, roleARN } = event.body;
-    const fileName = getAccountIdFromArn(roleARN) + ".parquet";
-    if (!fileContent || !fileName) {
+    const body = JSON.parse(event.body);
+    const roleARN = body.roleArn;
+    const accountId = getAccountIdFromArn(roleARN);
+    if (!accountId) {
       return {
         statusCode: 400,
         body: JSON.stringify({
-          message: "Missing fileContent or roleARN"
+          message: "Invalid ARN format"
         })
       };
     }
 
-    const buffer = Buffer.from(fileContent, "base64");
-    const params = {
-      Bucket: BUCKET_NAME,
-      Key: fileName,
-      Body: buffer,
-      ContentType: "application/vnd.apache.parquet"
-    };
+    const command = new PutCommand({
+      TableName: "accounts",
+      Item: {
+        account_id: accountId,
+        roleARN: roleARN,
+      }
+    });
 
-    await s3.send(new PutObjectCommand(params));
+    console.log("Command Created")
 
+    await docClient.send(command);
     return {
       statusCode: 200,
-      body: JSON.stringify({ message: "File uploaded successfully", fileName })
+      body: JSON.stringify({
+        message: "Account added successfully",
+        accountId: accountId
+      })
     };
   } catch (error) {
     return {
       statusCode: 500,
       body: JSON.stringify({
-        message: "Error uploading file",
+        message: "Error adding account",
         error: error.message
       })
     };
