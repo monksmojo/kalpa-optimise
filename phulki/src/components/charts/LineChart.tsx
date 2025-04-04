@@ -28,20 +28,16 @@ const chartConfig = {
   visitors: {
     label: "Visitors"
   },
-  desktop: {
-    label: "Desktop",
+  cpuPercent: {
+    label: "CPU Percent",
     color: "hsl(var(--chart-1))"
-  },
-  mobile: {
-    label: "Mobile",
-    color: "hsl(var(--chart-2))"
   }
 } satisfies ChartConfig;
 
 interface LineChartProps {
   title: string;
   description: string;
-  data: { date: string; mobile: number; desktop: number }[];
+  data: { date: string; cpuPercent: number }[];
 }
 
 export function LineChartPhulki({
@@ -97,15 +93,15 @@ export function LineChartPhulki({
         >
           <AreaChart data={filteredData}>
             <defs>
-              <linearGradient id="fillDesktop" x1="0" y1="0" x2="0" y2="1">
+              <linearGradient id="fillCPU" x1="0" y1="0" x2="0" y2="1">
                 <stop
                   offset="5%"
-                  stopColor="var(--color-desktop)"
+                  stopColor="var(--color-cpuPercent)"
                   stopOpacity={0.8}
                 />
                 <stop
                   offset="95%"
-                  stopColor="var(--color-desktop)"
+                  stopColor="var(--color-cpuPercent)"
                   stopOpacity={0.1}
                 />
               </linearGradient>
@@ -159,10 +155,10 @@ export function LineChartPhulki({
               stackId="a"
             />
             <Area
-              dataKey="desktop"
+              dataKey="cpuPercent"
               type="natural"
-              fill="url(#fillDesktop)"
-              stroke="var(--color-desktop)"
+              fill="url(#fillCPU)"
+              stroke="var(--color-cpuPercent)"
               stackId="a"
             />
             <ChartLegend content={<ChartLegendContent />} />
