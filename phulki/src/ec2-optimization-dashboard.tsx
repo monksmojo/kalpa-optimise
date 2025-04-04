@@ -11,7 +11,6 @@ import {
   CpuIcon,
   DollarSign,
   Download,
-  FileText,
   HelpCircle,
   RefreshCw,
   Search,

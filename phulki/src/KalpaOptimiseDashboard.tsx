@@ -5,7 +5,6 @@ import {
   CloudCog,
   DollarSign,
   Download,
-  FileText,
   LineChart,
   PieChart,
   Settings,
