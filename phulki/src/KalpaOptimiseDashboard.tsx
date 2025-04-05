@@ -452,7 +452,9 @@ export default function KalpaOptimiseDashboard() {
               <TabsContent value="recommendations" className="space-y-4">
                 <Card>
                   <CardHeader>
-                    <CardTitle>AI-Powered Recommendations</CardTitle>
+                    <CardTitle>
+                      AI-Powered Reserved instance Recommendations
+                    </CardTitle>
                     <CardDescription>
                       Based on your AWS Cost and Usage Report analysis
                     </CardDescription>
@@ -473,41 +475,15 @@ export default function KalpaOptimiseDashboard() {
                         impact="High"
                         category="Pricing Model"
                       />
-                      <RecommendationItem
-                        title="Unattached EBS Volumes"
-                        description="Delete 12 unattached EBS volumes totaling 1.2TB"
-                        savings="$120/month"
-                        impact="Medium"
-                        category="Storage"
-                      />
-                      <RecommendationItem
-                        title="Idle RDS Instances"
-                        description="Downsize or terminate 2 RDS instances with <5% utilization"
-                        savings="$380/month"
-                        impact="Medium"
-                        category="Database"
-                      />
-                      <RecommendationItem
-                        title="Underutilized Load Balancers"
-                        description="Consolidate 3 load balancers with low traffic"
-                        savings="$55/month"
-                        impact="Low"
-                        category="Networking"
-                      />
                     </div>
                   </CardContent>
-                  <CardFooter>
-                    <Button className="w-full">
-                      Implement All Recommendations
-                    </Button>
-                  </CardFooter>
                 </Card>
 
                 <Card>
                   <CardHeader>
-                    <CardTitle>Savings Plan Recommendations</CardTitle>
+                    <CardTitle>Additional Recommendations</CardTitle>
                     <CardDescription>
-                      Optimize your commitment discounts
+                      Additional savings opportunities based on your usage
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
@@ -526,16 +502,12 @@ export default function KalpaOptimiseDashboard() {
                         savings="$1,280/month"
                         roi="40%"
                       />
-                      <SavingsPlanItem
-                        type="SageMaker Savings Plan"
-                        term="1 Year"
-                        commitment="$800/month"
-                        savings="$160/month"
-                        roi="20%"
-                      />
                     </div>
                   </CardContent>
                 </Card>
+                <CardFooter>
+                  <Button className="w-full">Check Metrics</Button>
+                </CardFooter>
               </TabsContent>
             </Tabs>
           </main>
@@ -595,7 +567,7 @@ function RecommendationItem({
   return (
     <div className="space-y-2 rounded-lg border p-4">
       <div className="flex items-start justify-between">
-        <div>
+        <div className="text-start">
           <h3 className="font-medium">{title}</h3>
           <p className="text-sm text-muted-foreground">{description}</p>
         </div>
@@ -614,9 +586,6 @@ function RecommendationItem({
         >
           {impact} Impact
         </span>
-        <div className="ml-auto">
-          <Button size="sm">Implement</Button>
-        </div>
       </div>
     </div>
   );
@@ -640,7 +609,7 @@ function SavingsPlanItem({
   return (
     <div className="space-y-2 rounded-lg border p-4">
       <div className="flex items-start justify-between">
-        <div>
+        <div className="text-start">
           <h3 className="font-medium">{type}</h3>
           <p className="text-sm text-muted-foreground">
             {term} term commitment
@@ -651,9 +620,6 @@ function SavingsPlanItem({
       <div className="flex items-center gap-4 pt-2">
         <span className="text-sm">Commitment: {commitment}</span>
         <span className="text-sm text-emerald-500">ROI: {roi}</span>
-        <div className="ml-auto">
-          <Button size="sm">Purchase</Button>
-        </div>
       </div>
     </div>
   );
