@@ -1,98 +1,103 @@
 [
   {
-    "Hour": "0:00",
-    "MeanCPUUtilization": 3.031377092968584
-  },
-  {
-    "Hour": "1:00",
-    "MeanCPUUtilization": 6.066357627825918
-  },
-  {
-    "Hour": "2:00",
-    "MeanCPUUtilization": 3.0946027595446184
-  },
-  {
-    "Hour": "3:00",
-    "MeanCPUUtilization": 2.652826755927839
-  },
-  {
-    "Hour": "4:00",
-    "MeanCPUUtilization": 9.95026286565549
-  },
-  {
-    "Hour": "5:00",
-    "MeanCPUUtilization": 9.975719606770145
-  },
-  {
-    "Hour": "6:00",
-    "MeanCPUUtilization": 6.150254240874485
-  },
-  {
-    "Hour": "7:00",
-    "MeanCPUUtilization": 10.539039571940744
-  },
-  {
-    "Hour": "8:00",
-    "MeanCPUUtilization": 3.3233889924926427
-  },
-  {
-    "Hour": "9:00",
-    "MeanCPUUtilization": 10.202207641741657
-  },
-  {
-    "Hour": "10:00",
-    "MeanCPUUtilization": 3.3500918376263185
-  },
-  {
-    "Hour": "11:00",
-    "MeanCPUUtilization": 2.7673808075724775
-  },
-  {
-    "Hour": "12:00",
-    "MeanCPUUtilization": 40.39874005752385
-  },
-  {
-    "Hour": "13:00",
-    "MeanCPUUtilization": 27.57649667597588
-  },
-  {
-    "Hour": "14:00",
-    "MeanCPUUtilization": 5.142884859515039
-  },
-  {
-    "Hour": "15:00",
-    "MeanCPUUtilization": 3.0326462969007477
-  },
-  {
-    "Hour": "16:00",
-    "MeanCPUUtilization": 2.72167992927441
-  },
-  {
-    "Hour": "17:00",
-    "MeanCPUUtilization": 4.951835548368724
-  },
-  {
-    "Hour": "18:00",
-    "MeanCPUUtilization": 5.173798776115688
-  },
-  {
-    "Hour": "19:00",
-    "MeanCPUUtilization": 6.059275114183463
-  },
-  {
-    "Hour": "20:00",
-    "MeanCPUUtilization": 2.780734468676649
-  },
-  {
-    "Hour": "21:00",
-    "MeanCPUUtilization": 5.190570457067995
-  },
-  {
-    "Hour": "22:00",
-    "MeanCPUUtilization": 4.103533314087453
-  },
-  {
-    "Hour": "23:00",
-    "MeanCPUUtilization": 6.1858729530045435
+    "instance_id": "i-0a0ebd2fc7a236cf5",
+    "hourlyHistory": [
+      {
+        "Hour": "0:00",
+        "MeanCPUUtilization": 2.419747097743275
+      },
+      {
+        "Hour": "1:00",
+        "MeanCPUUtilization": 2.5905266135121763
+      },
+      {
+        "Hour": "2:00",
+        "MeanCPUUtilization": 1.9798533910668552
+      },
+      {
+        "Hour": "3:00",
+        "MeanCPUUtilization": 1.8956810498151886
+      },
+      {
+        "Hour": "4:00",
+        "MeanCPUUtilization": 2.43016604551659
+      },
+      {
+        "Hour": "5:00",
+        "MeanCPUUtilization": 2.2319154501564853
+      },
+      {
+        "Hour": "6:00",
+        "MeanCPUUtilization": 2.1270190654328522
+      },
+      {
+        "Hour": "7:00",
+        "MeanCPUUtilization": 10.275002811252843
+      },
+      {
+        "Hour": "8:00",
+        "MeanCPUUtilization": 6.276231688530978
+      },
+      {
+        "Hour": "9:00",
+        "MeanCPUUtilization": 10.962539983054006
+      },
+      {
+        "Hour": "10:00",
+        "MeanCPUUtilization": 1.8583260619635122
+      },
+      {
+        "Hour": "11:00",
+        "MeanCPUUtilization": 1.958742540473157
+      },
+      {
+        "Hour": "12:00",
+        "MeanCPUUtilization": 38.13341446796526
+      },
+      {
+        "Hour": "13:00",
+        "MeanCPUUtilization": 1.9171273942855633
+      },
+      {
+        "Hour": "14:00",
+        "MeanCPUUtilization": 4.989400425611704
+      },
+      {
+        "Hour": "15:00",
+        "MeanCPUUtilization": 1.971659962725459
+      },
+      {
+        "Hour": "16:00",
+        "MeanCPUUtilization": 1.883941794122646
+      },
+      {
+        "Hour": "17:00",
+        "MeanCPUUtilization": 2.2126455731535897
+      },
+      {
+        "Hour": "18:00",
+        "MeanCPUUtilization": 3.4725367868243597
+      },
+      {
+        "Hour": "19:00",
+        "MeanCPUUtilization": 2.1272042449633917
+      },
+      {
+        "Hour": "20:00",
+        "MeanCPUUtilization": 1.8387073413683872
+      },
+      {
+        "Hour": "21:00",
+        "MeanCPUUtilization": 6.773747060376674
+      },
+      {
+        "Hour": "22:00",
+        "MeanCPUUtilization": 1.8825041377324625
+      },
+      {
+        "Hour": "23:00",
+        "MeanCPUUtilization": 6.556079268635912
+      }
+    ]
   }
 ]
