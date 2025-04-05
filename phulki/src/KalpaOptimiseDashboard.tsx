@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, useEffect, FormEvent, ChangeEvent } from "react";
 import {
   BarChart,
@@ -45,12 +46,42 @@ import { RecommendationItem } from "@/components/charts/RecommendationItem";
 import { RiUtilizationChart } from "@/components/charts/RiUtilizationChart";
 import { InstanceDistribution } from "@/components/charts/InstanceDistribution";
 import { SavingsPlanItem } from "@/components/charts/SavingsPlanItem";
-import { response } from "@/data/response";
+
+const API_URL = import.meta.env.VITE_REPORT_URL;
+const ACCOUNT_ID = 123456789012; // Replace with your actual account ID
 
 export default function KalpaOptimiseDashboard() {
   const [isLoading, setIsLoading] = useState(true);
-
   const [activeTab, setActiveTab] = useState("overview");
+  interface Metrics {
+    totalComputeInstance: number;
+    activeRI: number;
+    riUtilization: number;
+    potentialSavings: number;
+  }
+
+  interface ResponseData {
+    metrics: Metrics;
+    utilizationData: Array<any>;
+    recommendations: {
+      reservedInstances: Array<any>;
+      additionalRecommendations: Array<any>;
+    };
+  }
+
+  const [response, setResponse] = useState<ResponseData>({
+    metrics: {
+      totalComputeInstance: 0,
+      activeRI: 0,
+      riUtilization: 0,
+      potentialSavings: 0
+    },
+    utilizationData: [],
+    recommendations: {
+      reservedInstances: [],
+      additionalRecommendations: []
+    }
+  });
 
   // Form state variables
   const [roleArn, setRoleArn] = useState<string>("");
@@ -176,8 +207,19 @@ export default function KalpaOptimiseDashboard() {
 
   // Simulate loading for demonstration
   useEffect(() => {
-    const timer = setTimeout(() => setIsLoading(false), 2000);
-    return () => clearTimeout(timer);
+    fetch(API_URL + "/?accountId=" + ACCOUNT_ID).then((response) => {
+      if (response.ok) {
+        response.json().then((data) => {
+          console.log("Data fetched successfully:", data);
+          setIsLoading(false);
+
+          setResponse(data);
+        });
+      } else {
+        console.error("Error fetching data:", response.statusText);
+        setError("Failed to fetch data");
+      }
+    });
   }, []);
 
   return (
