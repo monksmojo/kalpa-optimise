@@ -38,8 +38,6 @@ import {
   SidebarSeparator
 } from "@/components/ui/sidebar";
 import { Input } from "./components/ui/input";
-import { utilizationData } from "./data/utilizationData";
-import { metricsData } from "@/data/metricsData";
 import { DialogUtilization } from "@/components/DialogUtilization";
 import KalpaOptimiseDashboardSkeleton from "./KalpaOptimiseDashboardSkeleton";
 import { MetricCard } from "@/components/charts/MetricCart";
@@ -47,6 +45,7 @@ import { RecommendationItem } from "@/components/charts/RecommendationItem";
 import { RiUtilizationChart } from "@/components/charts/RiUtilizationChart";
 import { InstanceDistribution } from "@/components/charts/InstanceDistribution";
 import { SavingsPlanItem } from "@/components/charts/SavingsPlanItem";
+import { response } from "@/data/response";
 
 export default function KalpaOptimiseDashboard() {
   const [isLoading, setIsLoading] = useState(true);
@@ -333,22 +332,22 @@ export default function KalpaOptimiseDashboard() {
                   <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
                     <MetricCard
                       title="Total Compute Instances"
-                      value={metricsData.totalComputeInstance}
+                      value={response.metrics.totalComputeInstance}
                       icon={<CpuIcon className="h-4 w-4" />}
                     />
                     <MetricCard
                       title="Active RIs"
-                      value={metricsData.activeRI}
+                      value={response.metrics.activeRI}
                       icon={<Check className="h-4 w-4" />}
                     />
                     <MetricCard
                       title="RI Utilization"
-                      value={metricsData.riUtilization}
+                      value={response.metrics.riUtilization}
                       icon={<BarChart className="h-4 w-4" />}
                     />
                     <MetricCard
                       title="Potential Savings"
-                      value={metricsData.potentialSavings}
+                      value={response.metrics.potentialSavings}
                       icon={<DollarSign className="h-4 w-4" />}
                     />
                   </div>
@@ -406,12 +405,12 @@ export default function KalpaOptimiseDashboard() {
                                 CPU Utilization
                               </h3>
                               <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
-                                {utilizationData
+                                {response.utilizationData
                                   .slice(0, 8)
                                   .map((instance, i) => {
                                     let bgColor;
                                     if (instance.cpu < 20)
-                                      bgColor = "bg-rose-500";
+                                      bgColor = "bg-red-500";
                                     else if (instance.cpu < 40)
                                       bgColor = "bg-rose-300";
                                     else if (instance.cpu < 60)
@@ -478,20 +477,20 @@ export default function KalpaOptimiseDashboard() {
                     </CardHeader>
                     <CardContent>
                       <div className="space-y-6">
-                        <RecommendationItem
-                          title="EC2 Instance Rightsizing"
-                          description="Replace 5 t2.micro instances with 3 t3.small instances in us-east-1"
-                          savings="$420/month"
-                          impact="High"
-                          category="Compute"
-                        />
-                        <RecommendationItem
-                          title="Reserved Instance Purchase"
-                          description="Purchase 3-year RI for consistently running m5.xlarge instances"
-                          savings="$850/month"
-                          impact="High"
-                          category="Pricing Model"
-                        />
+                        {response.recommendations.reservedInstances.map(
+                          (ri) => (
+                            <RecommendationItem
+                              title={ri.title}
+                              description={ri.description}
+                              savings={ri.savings}
+                              impact={
+                                ["High", "Medium", "Low"].includes(ri.impact)
+                                  ? (ri.impact as "High" | "Medium" | "Low")
+                                  : "Low"
+                              }
+                            />
+                          )
+                        )}
                       </div>
                     </CardContent>
                   </Card>
@@ -505,20 +504,17 @@ export default function KalpaOptimiseDashboard() {
                     </CardHeader>
                     <CardContent>
                       <div className="space-y-6">
-                        <SavingsPlanItem
-                          type="Compute Savings Plan"
-                          term="1 Year"
-                          commitment="$4,500/month"
-                          savings="$1,350/month"
-                          roi="30%"
-                        />
-                        <SavingsPlanItem
-                          type="EC2 Instance Savings Plan"
-                          term="3 Years"
-                          commitment="$3,200/month"
-                          savings="$1,280/month"
-                          roi="40%"
-                        />
+                        {response.recommendations.additionalRecommendations.map(
+                          (recommendations) => (
+                            <SavingsPlanItem
+                              name={recommendations.name}
+                              term={recommendations.term}
+                              commitment={recommendations.commitment}
+                              savings={recommendations.savings}
+                              savingsPercent={recommendations.savingsPercent}
+                            />
+                          )
+                        )}
                       </div>
                     </CardContent>
                   </Card>

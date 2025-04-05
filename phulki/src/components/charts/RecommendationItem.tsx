@@ -4,14 +4,12 @@ export function RecommendationItem({
   title,
   description,
   savings,
-  impact,
-  category
+  impact
 }: {
   title: string;
   description: string;
   savings: string;
   impact: "High" | "Medium" | "Low";
-  category: string;
 }) {
   return (
     <div className="space-y-2 rounded-lg border p-4">
@@ -23,7 +21,6 @@ export function RecommendationItem({
         <Badge className="bg-emerald-500 hover:bg-emerald-600">{savings}</Badge>
       </div>
       <div className="flex items-center gap-4 pt-2">
-        <Badge variant="outline">{category}</Badge>
         <span
           className={`text-xs ${
             impact === "High"

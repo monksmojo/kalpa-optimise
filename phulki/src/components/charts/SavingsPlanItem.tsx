@@ -1,25 +1,25 @@
 import { Badge } from "@/components/ui/badge";
 
 interface SavingsPlanItemProps {
-  type: string;
+  name: string;
   term: string;
   commitment: string;
   savings: string;
-  roi: string;
+  savingsPercent: string;
 }
 
 export function SavingsPlanItem({
-  type,
+  name,
   term,
   commitment,
   savings,
-  roi
+  savingsPercent
 }: SavingsPlanItemProps) {
   return (
     <div className="space-y-2 rounded-lg border p-4">
       <div className="flex items-start justify-between">
         <div className="text-start">
-          <h3 className="font-medium">{type}</h3>
+          <h3 className="font-medium">{name}</h3>
           <p className="text-sm text-muted-foreground">
             {term} term commitment
           </p>
@@ -28,7 +28,9 @@ export function SavingsPlanItem({
       </div>
       <div className="flex items-center gap-4 pt-2">
         <span className="text-sm">Commitment: {commitment}</span>
-        <span className="text-sm text-emerald-500">ROI: {roi}</span>
+        <span className="text-sm text-emerald-500">
+          Savings percent: {savingsPercent}
+        </span>
       </div>
     </div>
   );
