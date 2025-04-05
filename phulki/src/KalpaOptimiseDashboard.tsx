@@ -39,7 +39,7 @@ import {
 } from "@/components/ui/sidebar";
 import { Input } from "./components/ui/input";
 import { DialogUtilization } from "@/components/DialogUtilization";
-import KalpaOptimiseDashboardSkeleton from "./KalpaOptimiseDashboardSkeleton";
+import KalpaOptimiseDashboardSkeleton from "./components/loading/KalpaOptimiseDashboardSkeleton";
 import { MetricCard } from "@/components/charts/MetricCart";
 import { RecommendationItem } from "@/components/charts/RecommendationItem";
 import { RiUtilizationChart } from "@/components/charts/RiUtilizationChart";
