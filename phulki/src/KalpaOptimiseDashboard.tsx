@@ -10,7 +10,11 @@ import {
   LineChart,
   TrendingDown,
   Upload,
-  Loader
+  Loader,
+  Copy,
+  ChevronRight,
+  ChevronDown,
+  ChevronUp,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -20,7 +24,7 @@ import {
   CardDescription,
   CardFooter,
   CardHeader,
-  CardTitle
+  CardTitle,
 } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
@@ -36,7 +40,7 @@ import {
   SidebarGroupLabel,
   SidebarGroupContent,
   SidebarTrigger,
-  SidebarSeparator
+  SidebarSeparator,
 } from "@/components/ui/sidebar";
 import { Input } from "./components/ui/input";
 import { DialogUtilization } from "@/components/DialogUtilization";
@@ -49,8 +53,34 @@ import { SavingsPlanItem } from "@/components/charts/SavingsPlanItem";
 import { InProgress } from "@/components/charts/InProgress";
 
 const API_URL = import.meta.env.VITE_REPORT_URL;
-const ACCOUNT_ID = 123456789012; // Replace with your actual account ID
-// const ACCOUNT_ID = 3233; // Replace with your actual account ID
+const ACCOUNT_ID = 518435766071;
+
+interface PolicyState {
+  trustPolicy: boolean;
+  readOnlyPolicy: boolean;
+  curPolicy: boolean;
+}
+
+interface ExpandedStepsState {
+  step1: boolean;
+  step2: boolean;
+  step3: boolean;
+  step4: boolean;
+  step5: boolean;
+  step6: boolean;
+}
+
+interface PolicyObject {
+  Version: string;
+  Statement: Array<{
+    Effect: string;
+    Principal?: {
+      AWS: string;
+    };
+    Action: string | string[];
+    Resource?: string;
+  }>;
+}
 
 export default function KalpaOptimiseDashboard() {
   const [isLoading, setIsLoading] = useState(true);
@@ -77,14 +107,14 @@ export default function KalpaOptimiseDashboard() {
       totalComputeInstance: 0,
       activeRI: 0,
       riUtilization: 0,
-      potentialSavings: 0
+      potentialSavings: 0,
     },
     utilizationData: [],
     recommendations: {
       reservedInstances: [],
-      additionalRecommendations: []
+      additionalRecommendations: [],
     },
-    message: ""
+    message: "",
   });
   console.log("🚀 ~ KalpaOptimiseDashboard ~ response:", response);
 
@@ -97,8 +127,8 @@ export default function KalpaOptimiseDashboard() {
   const [hourlyUtilization, setHourlyUtilization] = useState([
     {
       Hour: "",
-      MeanCPUUtilization: 0
-    }
+      MeanCPUUtilization: 0,
+    },
   ]);
   const [openHourlyChart, setOpenHourlyChart] = useState(false);
 
@@ -137,7 +167,7 @@ export default function KalpaOptimiseDashboard() {
       const getSignedUrlResponse = await fetch(
         `https://5ce9usd6he.execute-api.us-east-1.amazonaws.com/pre-signed-url?roleARN=${roleArn}`,
         {
-          method: "GET"
+          method: "GET",
         }
       ).then((response) => response.json());
       const signedUrl = getSignedUrlResponse.signedUrl;
@@ -147,13 +177,13 @@ export default function KalpaOptimiseDashboard() {
 
       try {
         const requestBody = {
-          roleArn
+          roleArn,
         };
         const response = await fetch(
           "https://cusatad2yy5avtvs7tauul5h4e0hzcbz.lambda-url.us-east-1.on.aws/",
           {
             method: "POST",
-            body: JSON.stringify(requestBody)
+            body: JSON.stringify(requestBody),
           }
         );
 
@@ -171,9 +201,9 @@ export default function KalpaOptimiseDashboard() {
         const uploadResponse = await fetch(signedUrl, {
           method: "PUT",
           headers: {
-            "Content-Type": "application/vnd.apache.parquet"
+            "Content-Type": "application/vnd.apache.parquet",
           },
-          body: file
+          body: file,
         });
 
         if (!uploadResponse.ok) {
@@ -226,6 +256,64 @@ export default function KalpaOptimiseDashboard() {
       }
     });
   }, []);
+
+  // Policy Creation Walkthrough
+  const [copied, setCopied] = useState<PolicyState>({
+    trustPolicy: false,
+    readOnlyPolicy: false,
+    curPolicy: false,
+  });
+
+  const [expandedSteps, setExpandedSteps] = useState<ExpandedStepsState>({
+    step1: true,
+    step2: false,
+    step3: false,
+    step4: false,
+    step5: false,
+    step6: false,
+  });
+
+  const trustPolicy: PolicyObject = {
+    Version: "2012-10-17",
+    Statement: [
+      {
+        Effect: "Allow",
+        Principal: {
+          AWS: "arn:aws:iam::518435766071:role/service-role/cloudwatch-ingestion-role-od68zupr",
+        },
+        Action: "sts:AssumeRole",
+      },
+    ],
+  };
+
+  const cloudWatchReadOnlyPolicy: PolicyObject = {
+    Version: "2012-10-17",
+    Statement: [
+      {
+        Effect: "Allow",
+        Action: ["cloudwatch:Describe*", "cloudwatch:Get*", "cloudwatch:List*"],
+        Resource: "*",
+      },
+    ],
+  };
+
+  const copyToClipboard = (
+    text: string,
+    policyType: keyof PolicyState
+  ): void => {
+    navigator.clipboard.writeText(text);
+    setCopied({ ...copied, [policyType]: true });
+    setTimeout(() => {
+      setCopied({ ...copied, [policyType]: false });
+    }, 2000);
+  };
+
+  const toggleStep = (step: keyof ExpandedStepsState): void => {
+    setExpandedSteps((prev) => ({
+      ...prev,
+      [step]: !prev[step],
+    }));
+  };
 
   return (
     <SidebarProvider>
@@ -315,7 +403,7 @@ export default function KalpaOptimiseDashboard() {
                 )}
                 {activeTab === "uploadCUR" && (
                   <TabsContent value="uploadCUR">
-                    <Card>
+                    <Card className="mb-4">
                       <CardHeader>
                         <CardTitle>Upload Cost & Usage Report</CardTitle>
                         <CardDescription>
@@ -329,7 +417,7 @@ export default function KalpaOptimiseDashboard() {
                             <Input
                               className="w-full"
                               id="roleArn"
-                              placeholder="arn:aws:iam::123456789012:role/example-role"
+                              placeholder="arn:aws:iam::518435766071:role/example-role"
                               value={roleArn}
                               onChange={handleArnChange}
                               required
@@ -377,9 +465,362 @@ export default function KalpaOptimiseDashboard() {
                         </form>
                       </CardContent>
                     </Card>
+                    <Card>
+                      <CardHeader>
+                        <CardTitle>Setting Up Cross Account Trust</CardTitle>
+                        <CardDescription>
+                          Please create a IAM role in your AWS account with the
+                          following trust policy to grant cloudwatch readonly
+                          access to the Kalpa Optimise service account.
+                        </CardDescription>
+                      </CardHeader>
+                      <CardContent>
+                        <Tabs defaultValue="step-by-step" className="w-full">
+                          <TabsList className="mb-4">
+                            <TabsTrigger value="step-by-step">
+                              Step-by-Step Guide
+                            </TabsTrigger>
+                            <TabsTrigger value="policies">Policies</TabsTrigger>
+                          </TabsList>
+
+                          <TabsContent value="step-by-step">
+                            <div className="divide-y">
+                              {/* Step 1 */}
+                              <div className="py-2">
+                                <div
+                                  className="flex cursor-pointer items-center justify-between py-2"
+                                  onClick={() => toggleStep("step1")}
+                                >
+                                  <h3 className="text-base font-medium">
+                                    Step 1: Create a new IAM Role
+                                  </h3>
+                                  {expandedSteps.step1 ? (
+                                    <ChevronUp className="h-5 w-5" />
+                                  ) : (
+                                    <ChevronDown className="h-5 w-5" />
+                                  )}
+                                </div>
+
+                                {expandedSteps.step1 && (
+                                  <div className="space-y-2 pl-6 pt-2">
+                                    <p className="flex items-center gap-2">
+                                      <ChevronRight className="h-4 w-4 text-green-500" />
+                                      Sign in to your AWS Management Console
+                                    </p>
+                                    <p className="flex items-center gap-2">
+                                      <ChevronRight className="h-4 w-4 text-green-500" />
+                                      Navigate to IAM (Identity and Access
+                                      Management)
+                                    </p>
+                                    <p className="flex items-center gap-2">
+                                      <ChevronRight className="h-4 w-4 text-green-500" />
+                                      In the left navigation pane, click on{" "}
+                                      <span className="font-medium">Roles</span>
+                                    </p>
+                                    <p className="flex items-center gap-2">
+                                      <ChevronRight className="h-4 w-4 text-green-500" />
+                                      Click the{" "}
+                                      <span className="font-medium">
+                                        Create role
+                                      </span>{" "}
+                                      button
+                                    </p>
+                                  </div>
+                                )}
+                              </div>
+
+                              {/* Step 2 */}
+                              <div className="py-2">
+                                <div
+                                  className="flex cursor-pointer items-center justify-between py-2"
+                                  onClick={() => toggleStep("step2")}
+                                >
+                                  <h3 className="text-base font-medium">
+                                    Step 2: Configure Trust Relationship
+                                  </h3>
+                                  {expandedSteps.step2 ? (
+                                    <ChevronUp className="h-5 w-5" />
+                                  ) : (
+                                    <ChevronDown className="h-5 w-5" />
+                                  )}
+                                </div>
+
+                                {expandedSteps.step2 && (
+                                  <div className="space-y-2 pl-6 pt-2">
+                                    <p className="flex items-center gap-2">
+                                      <ChevronRight className="h-4 w-4 text-green-500" />
+                                      Select{" "}
+                                      <span className="font-medium">
+                                        Another AWS account
+                                      </span>{" "}
+                                      as the trusted entity type
+                                    </p>
+                                    <p className="flex items-center gap-2">
+                                      <ChevronRight className="h-4 w-4 text-green-500" />
+                                      Enter the Kalpa Optimise account ID:{" "}
+                                      <span className="font-medium">
+                                        518435766071
+                                      </span>
+                                    </p>
+                                    <p className="flex items-center gap-2">
+                                      <ChevronRight className="h-4 w-4 text-green-500" />
+                                      Click{" "}
+                                      <span className="font-medium">Next</span>
+                                    </p>
+                                    <div className="mt-2 flex items-center">
+                                      <Button
+                                        variant="outline"
+                                        className="flex items-center gap-2"
+                                        onClick={() =>
+                                          copyToClipboard(
+                                            JSON.stringify(
+                                              trustPolicy,
+                                              null,
+                                              2
+                                            ),
+                                            "trustPolicy"
+                                          )
+                                        }
+                                      >
+                                        {copied.trustPolicy ? (
+                                          <Check className="h-4 w-4" />
+                                        ) : (
+                                          <Copy className="h-4 w-4" />
+                                        )}
+                                        {copied.trustPolicy
+                                          ? "Copied!"
+                                          : "Copy Trust Policy JSON"}
+                                      </Button>
+                                    </div>
+                                  </div>
+                                )}
+                              </div>
+
+                              {/* Step 3 */}
+                              <div className="py-2">
+                                <div
+                                  className="flex cursor-pointer items-center justify-between py-2"
+                                  onClick={() => toggleStep("step3")}
+                                >
+                                  <h3 className="text-base font-medium">
+                                    Step 3: Attach CloudWatch Read-Only
+                                    Permissions
+                                  </h3>
+                                  {expandedSteps.step3 ? (
+                                    <ChevronUp className="h-5 w-5" />
+                                  ) : (
+                                    <ChevronDown className="h-5 w-5" />
+                                  )}
+                                </div>
+
+                                {expandedSteps.step3 && (
+                                  <div className="space-y-2 pl-6 pt-2">
+                                    <p className="flex items-center gap-2">
+                                      <ChevronRight className="h-4 w-4 text-green-500" />
+                                      In the search box, type "CloudWatch"
+                                    </p>
+                                    <p className="flex items-center gap-2">
+                                      <ChevronRight className="h-4 w-4 text-green-500" />
+                                      Select the checkbox for{" "}
+                                      <span className="font-medium">
+                                        CloudWatchReadOnlyAccess
+                                      </span>
+                                    </p>
+                                    <p className="flex items-center gap-2">
+                                      <ChevronRight className="h-4 w-4 text-green-500" />
+                                      Click{" "}
+                                      <span className="font-medium">Next</span>
+                                    </p>
+                                    <div className="mt-2 flex items-center">
+                                      <Button
+                                        variant="outline"
+                                        className="flex items-center gap-2"
+                                        onClick={() =>
+                                          copyToClipboard(
+                                            JSON.stringify(
+                                              cloudWatchReadOnlyPolicy,
+                                              null,
+                                              2
+                                            ),
+                                            "readOnlyPolicy"
+                                          )
+                                        }
+                                      >
+                                        {copied.readOnlyPolicy ? (
+                                          <Check className="h-4 w-4" />
+                                        ) : (
+                                          <Copy className="h-4 w-4" />
+                                        )}
+                                        {copied.readOnlyPolicy
+                                          ? "Copied!"
+                                          : "Copy CloudWatch Read-Only Policy"}
+                                      </Button>
+                                    </div>
+                                  </div>
+                                )}
+                              </div>
+
+                              {/* Step 4 */}
+                              <div className="py-2">
+                                <div
+                                  className="flex cursor-pointer items-center justify-between py-2"
+                                  onClick={() => toggleStep("step5")}
+                                >
+                                  <h3 className="text-base font-medium">
+                                    Step 4: Complete Role Creation
+                                  </h3>
+                                  {expandedSteps.step5 ? (
+                                    <ChevronUp className="h-5 w-5" />
+                                  ) : (
+                                    <ChevronDown className="h-5 w-5" />
+                                  )}
+                                </div>
+
+                                {expandedSteps.step5 && (
+                                  <div className="space-y-2 pl-6 pt-2">
+                                    <p className="flex items-center gap-2">
+                                      <ChevronRight className="h-4 w-4 text-green-500" />
+                                      Name your role:{" "}
+                                      <span className="font-medium">
+                                        KalpaOptimiseRole
+                                      </span>{" "}
+                                      (or your preferred name)
+                                    </p>
+                                    <p className="flex items-center gap-2">
+                                      <ChevronRight className="h-4 w-4 text-green-500" />
+                                      Add a description:{" "}
+                                      <span className="font-medium">
+                                        Role for Kalpa Optimise to access
+                                        CloudWatch metrics
+                                      </span>
+                                    </p>
+                                    <p className="flex items-center gap-2">
+                                      <ChevronRight className="h-4 w-4 text-green-500" />
+                                      Click{" "}
+                                      <span className="font-medium">
+                                        Create role
+                                      </span>
+                                    </p>
+                                  </div>
+                                )}
+                              </div>
+
+                              {/* Step 5 */}
+                              <div className="py-2">
+                                <div
+                                  className="flex cursor-pointer items-center justify-between py-2"
+                                  onClick={() => toggleStep("step6")}
+                                >
+                                  <h3 className="text-base font-medium">
+                                    Step 5: Share Role ARN with Kalpa Optimise
+                                  </h3>
+                                  {expandedSteps.step6 ? (
+                                    <ChevronUp className="h-5 w-5" />
+                                  ) : (
+                                    <ChevronDown className="h-5 w-5" />
+                                  )}
+                                </div>
+
+                                {expandedSteps.step6 && (
+                                  <div className="space-y-2 pl-6 pt-2">
+                                    <p className="flex items-center gap-2">
+                                      <ChevronRight className="h-4 w-4 text-green-500" />
+                                      Navigate to the newly created role
+                                    </p>
+                                    <p className="flex items-center gap-2">
+                                      <ChevronRight className="h-4 w-4 text-green-500" />
+                                      Copy the{" "}
+                                      <span className="font-medium">
+                                        Role ARN
+                                      </span>{" "}
+                                      (looks like:
+                                      arn:aws:iam::YOUR-ACCOUNT-ID:role/KalpaOptimiseRole)
+                                    </p>
+                                    <p className="flex items-center gap-2">
+                                      <ChevronRight className="h-4 w-4 text-green-500" />
+                                      Paste the Role ARN in the Kalpa Optimise
+                                      dashboard
+                                    </p>
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                          </TabsContent>
+
+                          <TabsContent value="policies">
+                            <div className="space-y-6">
+                              <div className="text-left">
+                                <h3 className="mb-2 text-lg font-medium">
+                                  Trust Policy
+                                </h3>
+                                <div className="relative rounded-md bg-gray-100 p-4">
+                                  <pre className="overflow-x-auto text-sm text-gray-800">
+                                    {JSON.stringify(trustPolicy, null, 2)}
+                                  </pre>
+                                  <Button
+                                    size="sm"
+                                    variant="outline"
+                                    className="absolute right-2 top-2 flex items-center gap-1"
+                                    onClick={() =>
+                                      copyToClipboard(
+                                        JSON.stringify(trustPolicy, null, 2),
+                                        "trustPolicy"
+                                      )
+                                    }
+                                  >
+                                    {copied.trustPolicy ? (
+                                      <Check className="h-4 w-4" />
+                                    ) : (
+                                      <Copy className="h-4 w-4" />
+                                    )}
+                                    {copied.trustPolicy ? "Copied!" : "Copy"}
+                                  </Button>
+                                </div>
+                              </div>
+
+                              <div className="text-left">
+                                <h3 className="mb-2 text-lg font-medium">
+                                  CloudWatch Read-Only Policy
+                                </h3>
+                                <div className="relative rounded-md bg-gray-100 p-4">
+                                  <pre className="overflow-x-auto text-sm text-gray-800">
+                                    {JSON.stringify(
+                                      cloudWatchReadOnlyPolicy,
+                                      null,
+                                      2
+                                    )}
+                                  </pre>
+                                  <Button
+                                    size="sm"
+                                    variant="outline"
+                                    className="absolute right-2 top-2 flex items-center gap-1"
+                                    onClick={() =>
+                                      copyToClipboard(
+                                        JSON.stringify(
+                                          cloudWatchReadOnlyPolicy,
+                                          null,
+                                          2
+                                        ),
+                                        "readOnlyPolicy"
+                                      )
+                                    }
+                                  >
+                                    {copied.readOnlyPolicy ? (
+                                      <Check className="h-4 w-4" />
+                                    ) : (
+                                      <Copy className="h-4 w-4" />
+                                    )}
+                                    {copied.readOnlyPolicy ? "Copied!" : "Copy"}
+                                  </Button>
+                                </div>
+                              </div>
+                            </div>
+                          </TabsContent>
+                        </Tabs>
+                      </CardContent>
+                    </Card>
                   </TabsContent>
                 )}
-                {/* Rest of your code remains unchanged */}
                 {activeTab === "overview" && (
                   <TabsContent value="overview" className="space-y-4">
                     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
