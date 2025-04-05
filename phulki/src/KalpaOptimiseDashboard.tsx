@@ -1,4 +1,4 @@
-import { useState, FormEvent, ChangeEvent } from "react";
+import { useState, useEffect, FormEvent, ChangeEvent } from "react";
 import {
   BarChart,
   Check,
@@ -12,7 +12,6 @@ import {
   Loader
 } from "lucide-react";
 
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -22,7 +21,6 @@ import {
   CardHeader,
   CardTitle
 } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   SidebarProvider,
@@ -43,11 +41,16 @@ import { Input } from "./components/ui/input";
 import { utilizationData } from "./data/utilizationData";
 import { metricsData } from "@/data/metricsData";
 import { DialogUtilization } from "@/components/DialogUtilization";
-import { RiRecommendations, riUtilizationData } from "./data/RiUtilization";
-import { instanceTypes } from "./data/instanceDistribution";
-import { Label } from "@/components/ui/label";
+import KalpaOptimiseDashboardSkeleton from "./KalpaOptimiseDashboardSkeleton";
+import { MetricCard } from "@/components/charts/MetricCart";
+import { RecommendationItem } from "@/components/charts/RecommendationItem";
+import { RiUtilizationChart } from "@/components/charts/RiUtilizationChart";
+import { InstanceDistribution } from "@/components/charts/InstanceDistribution";
+import { SavingsPlanItem } from "@/components/charts/SavingsPlanItem";
 
 export default function KalpaOptimiseDashboard() {
+  const [isLoading, setIsLoading] = useState(true);
+
   const [activeTab, setActiveTab] = useState("overview");
 
   // Form state variables
@@ -171,6 +174,16 @@ export default function KalpaOptimiseDashboard() {
       setIsSubmitting(false);
     }
   };
+
+  // Simulate loading for demonstration
+  useEffect(() => {
+    const timer = setTimeout(() => setIsLoading(false), 2000);
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (isLoading) {
+    return <KalpaOptimiseDashboardSkeleton />;
+  }
 
   return (
     <SidebarProvider>
@@ -514,207 +527,5 @@ export default function KalpaOptimiseDashboard() {
         </div>
       </div>
     </SidebarProvider>
-  );
-}
-
-// Your existing components remain the same
-interface MetricCardProps {
-  title: string;
-  value: string | number;
-  trend?: string;
-  trendType?: "positive" | "negative" | "neutral";
-  icon: React.ReactNode;
-}
-
-function MetricCard({ title, value, trend, trendType, icon }: MetricCardProps) {
-  return (
-    <Card>
-      <CardHeader className="flex flex-row items-center justify-between pb-2">
-        <CardTitle className="text-sm font-medium">{title}</CardTitle>
-        {icon}
-      </CardHeader>
-      <CardContent>
-        <div className="text-2xl pb-3 font-bold">{value}</div>
-        <p
-          className={`text-xs ${
-            trendType === "positive"
-              ? "text-emerald-500"
-              : trendType === "negative"
-              ? "text-rose-500"
-              : "text-muted-foreground"
-          }`}
-        >
-          {trend} {trendType !== "neutral"}
-        </p>
-      </CardContent>
-    </Card>
-  );
-}
-
-function RecommendationItem({
-  title,
-  description,
-  savings,
-  impact,
-  category
-}: {
-  title: string;
-  description: string;
-  savings: string;
-  impact: "High" | "Medium" | "Low";
-  category: string;
-}) {
-  return (
-    <div className="space-y-2 rounded-lg border p-4">
-      <div className="flex items-start justify-between">
-        <div className="text-start">
-          <h3 className="font-medium">{title}</h3>
-          <p className="text-sm text-muted-foreground">{description}</p>
-        </div>
-        <Badge className="bg-emerald-500 hover:bg-emerald-600">{savings}</Badge>
-      </div>
-      <div className="flex items-center gap-4 pt-2">
-        <Badge variant="outline">{category}</Badge>
-        <span
-          className={`text-xs ${
-            impact === "High"
-              ? "text-emerald-500"
-              : impact === "Medium"
-              ? "text-amber-500"
-              : "text-blue-500"
-          }`}
-        >
-          {impact} Impact
-        </span>
-      </div>
-    </div>
-  );
-}
-
-interface SavingsPlanItemProps {
-  type: string;
-  term: string;
-  commitment: string;
-  savings: string;
-  roi: string;
-}
-
-function SavingsPlanItem({
-  type,
-  term,
-  commitment,
-  savings,
-  roi
-}: SavingsPlanItemProps) {
-  return (
-    <div className="space-y-2 rounded-lg border p-4">
-      <div className="flex items-start justify-between">
-        <div className="text-start">
-          <h3 className="font-medium">{type}</h3>
-          <p className="text-sm text-muted-foreground">
-            {term} term commitment
-          </p>
-        </div>
-        <Badge className="bg-emerald-500 hover:bg-emerald-600">{savings}</Badge>
-      </div>
-      <div className="flex items-center gap-4 pt-2">
-        <span className="text-sm">Commitment: {commitment}</span>
-        <span className="text-sm text-emerald-500">ROI: {roi}</span>
-      </div>
-    </div>
-  );
-}
-
-function RiUtilizationChart() {
-  return (
-    <>
-      <div className="grid grid-cols-2 gap-3 md:grid-cols-4 mb-6">
-        {riUtilizationData.map((item, index) => (
-          <div
-            key={index}
-            className="p-4 rounded-md text-center"
-            style={{
-              backgroundColor:
-                index === 0
-                  ? "#D1FAE5"
-                  : index === 1
-                  ? "#FEF3C7"
-                  : index === 2
-                  ? "#DBEAFE"
-                  : "#FEE2E2"
-            }}
-          >
-            <span
-              className="text-lg font-bold"
-              style={{
-                color:
-                  index === 0
-                    ? "#047857"
-                    : index === 1
-                    ? "#D97706"
-                    : index === 2
-                    ? "#2563EB"
-                    : "#DC2626"
-              }}
-            >
-              {item.value}
-            </span>
-            <p className="text-sm font-medium text-gray-700">{item.label}</p>
-            <p className="text-xs text-gray-500">{item.count}</p>
-          </div>
-        ))}
-      </div>
-      <h3 className="text-md font-semibold mb-3">
-        Top RI Optimization Recommendations
-      </h3>
-      <div className="space-y-3">
-        {RiRecommendations.map((rec, index) => (
-          <div
-            key={index}
-            className="flex justify-between items-center p-3 border rounded-md shadow-sm"
-          >
-            <p className="text-sm font-medium text-gray-700">{rec.label}</p>
-            <Badge
-              className="px-3 py-1 text-white"
-              style={{
-                backgroundColor:
-                  index === 0 ? "#DC2626" : index === 1 ? "#047857" : "#2563EB"
-              }}
-            >
-              {rec.savings}
-            </Badge>
-          </div>
-        ))}
-      </div>
-    </>
-  );
-}
-
-function InstanceDistribution() {
-  return (
-    <>
-      {instanceTypes.map((instance) => (
-        <div
-          key={instance.family}
-          className="w-full items-center space-x-4 mb-2"
-        >
-          <div className="flex justify-between w-full px-2">
-            <Label htmlFor={instance.family} className="w-24">
-              {instance.family}
-            </Label>
-            <div className="flex">
-              <div className="flex text-sm mb-1">
-                <span>{instance.count}</span>
-                <span>({instance.percentage}%)</span>
-              </div>
-            </div>
-          </div>
-          <Progress
-            value={instance.percentage}
-            className="h-6 rounded-sm bg-gray-200"
-          />
-        </div>
-      ))}
-    </>
   );
 }
