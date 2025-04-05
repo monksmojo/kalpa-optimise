@@ -27,8 +27,10 @@ export const handler = async (event) => {
 
     if (!response.Item) {
       return {
-        statusCode: 404,
-        body: JSON.stringify({ error: "Item not found" })
+        statusCode: 200,
+        body: {
+          message: "Data being processed. It can take upto 15 minutes."
+        }
       };
     }
 

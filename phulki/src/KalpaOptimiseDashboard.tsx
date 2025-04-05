@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, useEffect, FormEvent, ChangeEvent } from "react";
 import {
   BarChart,
@@ -39,18 +40,53 @@ import {
 } from "@/components/ui/sidebar";
 import { Input } from "./components/ui/input";
 import { DialogUtilization } from "@/components/DialogUtilization";
-import KalpaOptimiseDashboardSkeleton from "./KalpaOptimiseDashboardSkeleton";
+import KalpaOptimiseDashboardSkeleton from "./components/loading/KalpaOptimiseDashboardSkeleton";
 import { MetricCard } from "@/components/charts/MetricCart";
 import { RecommendationItem } from "@/components/charts/RecommendationItem";
 import { RiUtilizationChart } from "@/components/charts/RiUtilizationChart";
 import { InstanceDistribution } from "@/components/charts/InstanceDistribution";
 import { SavingsPlanItem } from "@/components/charts/SavingsPlanItem";
-import { response } from "@/data/response";
+import { InProgress } from "@/components/charts/InProgress";
+
+const API_URL = import.meta.env.VITE_REPORT_URL;
+const ACCOUNT_ID = 123456789012; // Replace with your actual account ID
+// const ACCOUNT_ID = 3233; // Replace with your actual account ID
 
 export default function KalpaOptimiseDashboard() {
   const [isLoading, setIsLoading] = useState(true);
-
   const [activeTab, setActiveTab] = useState("overview");
+  interface Metrics {
+    totalComputeInstance: number;
+    activeRI: number;
+    riUtilization: number;
+    potentialSavings: number;
+  }
+
+  interface ResponseData {
+    metrics: Metrics;
+    utilizationData: Array<any>;
+    recommendations: {
+      reservedInstances: Array<any>;
+      additionalRecommendations: Array<any>;
+    };
+    message?: string;
+  }
+
+  const [response, setResponse] = useState<ResponseData>({
+    metrics: {
+      totalComputeInstance: 0,
+      activeRI: 0,
+      riUtilization: 0,
+      potentialSavings: 0
+    },
+    utilizationData: [],
+    recommendations: {
+      reservedInstances: [],
+      additionalRecommendations: []
+    },
+    message: ""
+  });
+  console.log("🚀 ~ KalpaOptimiseDashboard ~ response:", response);
 
   // Form state variables
   const [roleArn, setRoleArn] = useState<string>("");
@@ -176,8 +212,19 @@ export default function KalpaOptimiseDashboard() {
 
   // Simulate loading for demonstration
   useEffect(() => {
-    const timer = setTimeout(() => setIsLoading(false), 2000);
-    return () => clearTimeout(timer);
+    fetch(API_URL + "/?accountId=" + ACCOUNT_ID).then((response) => {
+      if (response.ok) {
+        response.json().then((data) => {
+          console.log("Data fetched successfully:", data);
+          setIsLoading(false);
+
+          setResponse(data);
+        });
+      } else {
+        console.error("Error fetching data:", response.statusText);
+        setError("Failed to fetch data");
+      }
+    });
   }, []);
 
   return (
@@ -246,6 +293,11 @@ export default function KalpaOptimiseDashboard() {
 
           {isLoading ? (
             <KalpaOptimiseDashboardSkeleton />
+          ) : (activeTab === "overview" || activeTab === "recommendations") &&
+            response.message ? (
+            <div className="flex flex-col mt-30 max-w-200 mx-auto">
+              <InProgress message={response.message} />
+            </div>
           ) : (
             <main className="container mx-auto p-4 md:p-6">
               <Tabs
@@ -261,267 +313,270 @@ export default function KalpaOptimiseDashboard() {
                     </TabsTrigger>
                   </TabsList>
                 )}
-
-                <TabsContent value="uploadCUR">
-                  <Card>
-                    <CardHeader>
-                      <CardTitle>Upload Cost & Usage Report</CardTitle>
-                      <CardDescription>
-                        Provide your AWS Role ARN and upload your CUR file for
-                        analysis
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <form className="space-y-4" onSubmit={handleSubmit}>
-                        <div className="space-y-2">
-                          <Input
-                            className="w-full"
-                            id="roleArn"
-                            placeholder="arn:aws:iam::123456789012:role/example-role"
-                            value={roleArn}
-                            onChange={handleArnChange}
-                            required
-                          />
-                          <p className="text-sm text-muted-foreground flex">
-                            The Role ARN with permissions to cloudwatch data
-                            from your AWS Account
-                          </p>
-                        </div>
-
-                        <div className="flex gap-5">
+                {activeTab === "uploadCUR" && (
+                  <TabsContent value="uploadCUR">
+                    <Card>
+                      <CardHeader>
+                        <CardTitle>Upload Cost & Usage Report</CardTitle>
+                        <CardDescription>
+                          Provide your AWS Role ARN and upload your CUR file for
+                          analysis
+                        </CardDescription>
+                      </CardHeader>
+                      <CardContent>
+                        <form className="space-y-4" onSubmit={handleSubmit}>
                           <div className="space-y-2">
-                            <div className="grid w-full max-w-sm items-center gap-1.5">
-                              <Input
-                                id="curFile"
-                                type="file"
-                                accept=".parquet"
-                                onChange={handleFileChange}
-                                required
-                              />
-                              <p className="text-sm text-muted-foreground flex">
-                                Upload your AWS Cost & Usage Report (Parquet
-                                format)
-                              </p>
-                            </div>
+                            <Input
+                              className="w-full"
+                              id="roleArn"
+                              placeholder="arn:aws:iam::123456789012:role/example-role"
+                              value={roleArn}
+                              onChange={handleArnChange}
+                              required
+                            />
+                            <p className="text-sm text-muted-foreground flex">
+                              The Role ARN with permissions to cloudwatch data
+                              from your AWS Account
+                            </p>
                           </div>
 
-                          <Button type="submit" disabled={isSubmitting}>
-                            {isSubmitting ? (
-                              <>
-                                <Loader className="mr-2 h-4 w-4 animate-spin" />
-                                Processing...
-                              </>
-                            ) : (
-                              <>
-                                <Upload className="mr-2 h-4 w-4" />
-                                Upload and Analyze
-                              </>
-                            )}
-                          </Button>
-                        </div>
-                        {error && (
-                          <p className="text-sm text-red-500">{error}</p>
-                        )}
-                      </form>
-                    </CardContent>
-                  </Card>
-                </TabsContent>
+                          <div className="flex gap-5">
+                            <div className="space-y-2">
+                              <div className="grid w-full max-w-sm items-center gap-1.5">
+                                <Input
+                                  id="curFile"
+                                  type="file"
+                                  accept=".parquet"
+                                  onChange={handleFileChange}
+                                  required
+                                />
+                                <p className="text-sm text-muted-foreground flex">
+                                  Upload your AWS Cost & Usage Report (Parquet
+                                  format)
+                                </p>
+                              </div>
+                            </div>
 
+                            <Button type="submit" disabled={isSubmitting}>
+                              {isSubmitting ? (
+                                <>
+                                  <Loader className="mr-2 h-4 w-4 animate-spin" />
+                                  Processing...
+                                </>
+                              ) : (
+                                <>
+                                  <Upload className="mr-2 h-4 w-4" />
+                                  Upload and Analyze
+                                </>
+                              )}
+                            </Button>
+                          </div>
+                          {error && (
+                            <p className="text-sm text-red-500">{error}</p>
+                          )}
+                        </form>
+                      </CardContent>
+                    </Card>
+                  </TabsContent>
+                )}
                 {/* Rest of your code remains unchanged */}
-                <TabsContent value="overview" className="space-y-4">
-                  <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-                    <MetricCard
-                      title="Total Compute Instances"
-                      value={response.metrics.totalComputeInstance}
-                      icon={<CpuIcon className="h-4 w-4" />}
+                {activeTab === "overview" && (
+                  <TabsContent value="overview" className="space-y-4">
+                    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+                      <MetricCard
+                        title="Total Compute Instances"
+                        value={response.metrics.totalComputeInstance}
+                        icon={<CpuIcon className="h-4 w-4" />}
+                      />
+                      <MetricCard
+                        title="Active RIs"
+                        value={response.metrics.activeRI}
+                        icon={<Check className="h-4 w-4" />}
+                      />
+                      <MetricCard
+                        title="RI Utilization"
+                        value={response.metrics.riUtilization}
+                        icon={<BarChart className="h-4 w-4" />}
+                      />
+                      <MetricCard
+                        title="Potential Savings"
+                        value={response.metrics.potentialSavings}
+                        icon={<DollarSign className="h-4 w-4" />}
+                      />
+                    </div>
+                    <DialogUtilization
+                      utilizationHistory={hourlyUtilization}
+                      shouldOpen={openHourlyChart}
+                      setShouldOpen={setOpenHourlyChart}
                     />
-                    <MetricCard
-                      title="Active RIs"
-                      value={response.metrics.activeRI}
-                      icon={<Check className="h-4 w-4" />}
-                    />
-                    <MetricCard
-                      title="RI Utilization"
-                      value={response.metrics.riUtilization}
-                      icon={<BarChart className="h-4 w-4" />}
-                    />
-                    <MetricCard
-                      title="Potential Savings"
-                      value={response.metrics.potentialSavings}
-                      icon={<DollarSign className="h-4 w-4" />}
-                    />
-                  </div>
-                  <DialogUtilization
-                    utilizationHistory={hourlyUtilization}
-                    shouldOpen={openHourlyChart}
-                    setShouldOpen={setOpenHourlyChart}
-                  />
-                  <div className="grid gap-4 md:grid-cols-2">
-                    <Card>
-                      <CardHeader>
-                        <CardTitle>Reserved Instance Utilization</CardTitle>
-                        <CardDescription>
-                          Visual breakdown of RI utilization and optimization
-                          opportunities
-                        </CardDescription>
-                      </CardHeader>
-                      <CardContent>
-                        <div className="h-80 w-full">
-                          <RiUtilizationChart />
-                        </div>
-                      </CardContent>
-                    </Card>
+                    <div className="grid gap-4 md:grid-cols-2">
+                      <Card>
+                        <CardHeader>
+                          <CardTitle>Reserved Instance Utilization</CardTitle>
+                          <CardDescription>
+                            Visual breakdown of RI utilization and optimization
+                            opportunities
+                          </CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                          <div className="h-80 w-full">
+                            <RiUtilizationChart />
+                          </div>
+                        </CardContent>
+                      </Card>
 
-                    <Card>
-                      <CardHeader>
-                        <CardTitle>Instance Type Distribution</CardTitle>
-                        <CardDescription>
-                          Breakdown by instance family across all compute
-                          services
-                        </CardDescription>
-                      </CardHeader>
-                      <CardContent>
-                        <div className="h-80 w-full overflow-y-auto">
-                          <InstanceDistribution />
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </div>
+                      <Card>
+                        <CardHeader>
+                          <CardTitle>Instance Type Distribution</CardTitle>
+                          <CardDescription>
+                            Breakdown by instance family across all compute
+                            services
+                          </CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                          <div className="h-80 w-full overflow-y-auto">
+                            <InstanceDistribution />
+                          </div>
+                        </CardContent>
+                      </Card>
+                    </div>
 
-                  <div className="mt-6">
+                    <div className="mt-6">
+                      <Card>
+                        <CardHeader>
+                          <CardTitle>Compute Utilization Analysis</CardTitle>
+                          <CardDescription>
+                            CPU and memory utilization across all compute
+                            instances
+                          </CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                          <div className="space-y-6">
+                            <div className="grid grid-cols-1 gap-6 md:grid-cols-1">
+                              <div>
+                                <h3 className="mb-4 text-sm font-medium">
+                                  CPU Utilization
+                                </h3>
+                                <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+                                  {response.utilizationData
+                                    .slice(0, 8)
+                                    .map((instance, i) => {
+                                      let bgColor;
+                                      if (instance.cpu < 20)
+                                        bgColor = "bg-red-500";
+                                      else if (instance.cpu < 40)
+                                        bgColor = "bg-rose-300";
+                                      else if (instance.cpu < 60)
+                                        bgColor = "bg-amber-300";
+                                      else if (instance.cpu < 80)
+                                        bgColor = "bg-emerald-300";
+                                      else bgColor = "bg-emerald-500";
+
+                                      return (
+                                        <div
+                                          key={`cpu-${i}`}
+                                          className={`flex flex-col items-center justify-center rounded-md ${bgColor} p-2 text-white`}
+                                          onClick={() => {
+                                            setOpenHourlyChart(true);
+                                            setHourlyUtilization(
+                                              instance.hourlyHistory
+                                            );
+                                          }}
+                                        >
+                                          <span className="text-xs font-bold">
+                                            {instance.cpu}%
+                                          </span>
+                                          <span className="text-xs truncate max-w-full">
+                                            {instance.id}
+                                          </span>
+                                          <span className="text-xs">
+                                            {instance.type}
+                                          </span>
+                                          <span className="text-xs opacity-80">
+                                            {instance.service}
+                                          </span>
+                                        </div>
+                                      );
+                                    })}
+                                </div>
+                                <div className="mt-2 flex justify-between text-xs">
+                                  <span className="text-rose-500">
+                                    Low (0-20%)
+                                  </span>
+                                  <span className="text-amber-500">
+                                    Medium (40-60%)
+                                  </span>
+                                  <span className="text-emerald-500">
+                                    High (80-100%)
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    </div>
+                  </TabsContent>
+                )}
+                {activeTab === "recommendations" && (
+                  <TabsContent value="recommendations" className="space-y-4">
                     <Card>
                       <CardHeader>
-                        <CardTitle>Compute Utilization Analysis</CardTitle>
+                        <CardTitle>
+                          AI-Powered Reserved instance Recommendations
+                        </CardTitle>
                         <CardDescription>
-                          CPU and memory utilization across all compute
-                          instances
+                          Based on your AWS Cost and Usage Report analysis
                         </CardDescription>
                       </CardHeader>
                       <CardContent>
                         <div className="space-y-6">
-                          <div className="grid grid-cols-1 gap-6 md:grid-cols-1">
-                            <div>
-                              <h3 className="mb-4 text-sm font-medium">
-                                CPU Utilization
-                              </h3>
-                              <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
-                                {response.utilizationData
-                                  .slice(0, 8)
-                                  .map((instance, i) => {
-                                    let bgColor;
-                                    if (instance.cpu < 20)
-                                      bgColor = "bg-red-500";
-                                    else if (instance.cpu < 40)
-                                      bgColor = "bg-rose-300";
-                                    else if (instance.cpu < 60)
-                                      bgColor = "bg-amber-300";
-                                    else if (instance.cpu < 80)
-                                      bgColor = "bg-emerald-300";
-                                    else bgColor = "bg-emerald-500";
-
-                                    return (
-                                      <div
-                                        key={`cpu-${i}`}
-                                        className={`flex flex-col items-center justify-center rounded-md ${bgColor} p-2 text-white`}
-                                        onClick={() => {
-                                          setOpenHourlyChart(true);
-                                          setHourlyUtilization(
-                                            instance.hourlyHistory
-                                          );
-                                        }}
-                                      >
-                                        <span className="text-xs font-bold">
-                                          {instance.cpu}%
-                                        </span>
-                                        <span className="text-xs truncate max-w-full">
-                                          {instance.id}
-                                        </span>
-                                        <span className="text-xs">
-                                          {instance.type}
-                                        </span>
-                                        <span className="text-xs opacity-80">
-                                          {instance.service}
-                                        </span>
-                                      </div>
-                                    );
-                                  })}
-                              </div>
-                              <div className="mt-2 flex justify-between text-xs">
-                                <span className="text-rose-500">
-                                  Low (0-20%)
-                                </span>
-                                <span className="text-amber-500">
-                                  Medium (40-60%)
-                                </span>
-                                <span className="text-emerald-500">
-                                  High (80-100%)
-                                </span>
-                              </div>
-                            </div>
-                          </div>
+                          {response.recommendations.reservedInstances.map(
+                            (ri) => (
+                              <RecommendationItem
+                                title={ri.title}
+                                description={ri.description}
+                                savings={ri.savings}
+                                impact={
+                                  ["High", "Medium", "Low"].includes(ri.impact)
+                                    ? (ri.impact as "High" | "Medium" | "Low")
+                                    : "Low"
+                                }
+                              />
+                            )
+                          )}
                         </div>
                       </CardContent>
                     </Card>
-                  </div>
-                </TabsContent>
 
-                <TabsContent value="recommendations" className="space-y-4">
-                  <Card>
-                    <CardHeader>
-                      <CardTitle>
-                        AI-Powered Reserved instance Recommendations
-                      </CardTitle>
-                      <CardDescription>
-                        Based on your AWS Cost and Usage Report analysis
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="space-y-6">
-                        {response.recommendations.reservedInstances.map(
-                          (ri) => (
-                            <RecommendationItem
-                              title={ri.title}
-                              description={ri.description}
-                              savings={ri.savings}
-                              impact={
-                                ["High", "Medium", "Low"].includes(ri.impact)
-                                  ? (ri.impact as "High" | "Medium" | "Low")
-                                  : "Low"
-                              }
-                            />
-                          )
-                        )}
-                      </div>
-                    </CardContent>
-                  </Card>
-
-                  <Card>
-                    <CardHeader>
-                      <CardTitle>Additional Recommendations</CardTitle>
-                      <CardDescription>
-                        Additional savings opportunities based on your usage
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="space-y-6">
-                        {response.recommendations.additionalRecommendations.map(
-                          (recommendations) => (
-                            <SavingsPlanItem
-                              name={recommendations.name}
-                              term={recommendations.term}
-                              commitment={recommendations.commitment}
-                              savings={recommendations.savings}
-                              savingsPercent={recommendations.savingsPercent}
-                            />
-                          )
-                        )}
-                      </div>
-                    </CardContent>
-                  </Card>
-                  <CardFooter>
-                    <Button className="w-full">Check Metrics</Button>
-                  </CardFooter>
-                </TabsContent>
+                    <Card>
+                      <CardHeader>
+                        <CardTitle>Additional Recommendations</CardTitle>
+                        <CardDescription>
+                          Additional savings opportunities based on your usage
+                        </CardDescription>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="space-y-6">
+                          {response.recommendations.additionalRecommendations.map(
+                            (recommendations) => (
+                              <SavingsPlanItem
+                                name={recommendations.name}
+                                term={recommendations.term}
+                                commitment={recommendations.commitment}
+                                savings={recommendations.savings}
+                                savingsPercent={recommendations.savingsPercent}
+                              />
+                            )
+                          )}
+                        </div>
+                      </CardContent>
+                    </Card>
+                    <CardFooter>
+                      <Button className="w-full">Check Metrics</Button>
+                    </CardFooter>
+                  </TabsContent>
+                )}
               </Tabs>
             </main>
           )}
