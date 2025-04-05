@@ -7,7 +7,6 @@ import {
   DollarSign,
   Download,
   LineChart,
-  PieChart,
   TrendingDown,
   Upload,
   Loader,
@@ -40,27 +39,28 @@ import {
   SidebarTrigger,
   SidebarSeparator,
 } from "@/components/ui/sidebar";
-import { lineChartData } from "./components/charts/lineChartData";
-import { LineChartPhulki } from "./components/charts/LineChart";
 import { Input } from "./components/ui/input";
 import { utilizationData } from "./data/utilizationData";
 import { metricsData } from "@/data/metricsData";
 import { DialogUtilization } from "@/components/DialogUtilization";
+import { RiRecommendations, riUtilizationData } from "./data/RiUtilization";
+import { instanceTypes } from "./data/instanceDistribution";
+import { Label } from "@/components/ui/label";
 
 export default function KalpaOptimiseDashboard() {
-  const [activeTab, setActiveTab] = useState("uploadCUR");
-  
+  const [activeTab, setActiveTab] = useState("overview");
+
   // Form state variables
-  const [roleArn, setRoleArn] = useState<string>('');
+  const [roleArn, setRoleArn] = useState<string>("");
   const [file, setFile] = useState<File | null>(null);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
-  const [error, setError] = useState<string>('');
-  
+  const [error, setError] = useState<string>("");
+
   const [hourlyUtilization, setHourlyUtilization] = useState([
     {
       Hour: "",
-      MeanCPUUtilization: 0
-    }
+      MeanCPUUtilization: 0,
+    },
   ]);
   const [openHourlyChart, setOpenHourlyChart] = useState(false);
 
@@ -72,89 +72,102 @@ export default function KalpaOptimiseDashboard() {
   // Handle file input change
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>): void => {
     const selectedFile = e.target.files?.[0];
-    
-    if (selectedFile && selectedFile.name.endsWith('.parquet')) {
+
+    if (selectedFile && selectedFile.name.endsWith(".parquet")) {
       setFile(selectedFile);
-      setError('');
+      setError("");
     } else if (selectedFile) {
-      e.target.value = '';
+      e.target.value = "";
       setFile(null);
-      setError('Please upload only Parquet files');
+      setError("Please upload only Parquet files");
     }
   };
 
   // Handle form submission
   const handleSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
-    
+
     if (!roleArn.trim() || !file) {
-      setError('Please provide both Role ARN and a Parquet file');
+      setError("Please provide both Role ARN and a Parquet file");
       return;
     }
-    
-    setIsSubmitting(true);
-    setError('');
 
-    try{
-      const getSignedUrlResponse = await fetch(`https://5ce9usd6he.execute-api.us-east-1.amazonaws.com/pre-signed-url?roleARN=${roleArn}`, {
-        method: 'GET'
-      }).then(response => response.json());
+    setIsSubmitting(true);
+    setError("");
+
+    try {
+      const getSignedUrlResponse = await fetch(
+        `https://5ce9usd6he.execute-api.us-east-1.amazonaws.com/pre-signed-url?roleARN=${roleArn}`,
+        {
+          method: "GET",
+        }
+      ).then((response) => response.json());
       const signedUrl = getSignedUrlResponse.signedUrl;
       if (!signedUrl) {
-        throw new Error('Failed to get signed URL');
+        throw new Error("Failed to get signed URL");
       }
 
       try {
         const requestBody = {
           roleArn,
         };
-        const response = await fetch('https://cusatad2yy5avtvs7tauul5h4e0hzcbz.lambda-url.us-east-1.on.aws/', {
-          method: 'POST',
-          body: JSON.stringify(requestBody),
-        });
-        
-        const data: { success: boolean; analysisId?: string; message?: string } = await response.json();
-        
+        const response = await fetch(
+          "https://cusatad2yy5avtvs7tauul5h4e0hzcbz.lambda-url.us-east-1.on.aws/",
+          {
+            method: "POST",
+            body: JSON.stringify(requestBody),
+          }
+        );
+
+        const data: {
+          success: boolean;
+          analysisId?: string;
+          message?: string;
+        } = await response.json();
+
         if (!response.ok) {
-          throw new Error(data.message || 'Failed to upload data');
+          throw new Error(data.message || "Failed to upload data");
         }
-        
+
         console.log(file);
         const uploadResponse = await fetch(signedUrl, {
-          method: 'PUT',
+          method: "PUT",
           headers: {
-            'Content-Type': 'application/vnd.apache.parquet',
+            "Content-Type": "application/vnd.apache.parquet",
           },
           body: file,
         });
-  
+
         if (!uploadResponse.ok) {
-          throw new Error('Failed to upload file to S3');
+          throw new Error("Failed to upload file to S3");
         }
         // Handle successful upload
-        console.log('Upload successful:', data);
-        
+        console.log("Upload successful:", data);
+
         // Automatically switch to overview tab on success
-        setActiveTab('overview');
-        
+        setActiveTab("overview");
+
         // Clear form
-        setRoleArn('');
+        setRoleArn("");
         setFile(null);
-        const fileInput = document.getElementById('curFile') as HTMLInputElement;
-        if (fileInput) fileInput.value = '';
-        
+        const fileInput = document.getElementById(
+          "curFile"
+        ) as HTMLInputElement;
+        if (fileInput) fileInput.value = "";
       } catch (err) {
-        console.error('Error uploading data:', err);
-        setError(err instanceof Error ? err.message : 'An error occurred while uploading. Please try again.');
+        console.error("Error uploading data:", err);
+        setError(
+          err instanceof Error
+            ? err.message
+            : "An error occurred while uploading. Please try again."
+        );
       } finally {
         setIsSubmitting(false);
       }
-    }
-    catch (error) {
-      console.error('Error uploading data:', error);
-      setError('Failed to upload data');
-    }
-    finally {
+    } catch (error) {
+      console.error("Error uploading data:", error);
+      setError("Failed to upload data");
+    } finally {
       setIsSubmitting(false);
     }
   };
@@ -249,7 +262,7 @@ export default function KalpaOptimiseDashboard() {
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <form className="space-y-4" onSubmit={handleSubmit} >
+                    <form className="space-y-4" onSubmit={handleSubmit}>
                       <div className="space-y-2">
                         <Input
                           className="w-full"
@@ -268,7 +281,7 @@ export default function KalpaOptimiseDashboard() {
                       <div className="flex gap-5">
                         <div className="space-y-2">
                           <div className="grid w-full max-w-sm items-center gap-1.5">
-                            <Input 
+                            <Input
                               id="curFile"
                               type="file"
                               accept=".parquet"
@@ -276,7 +289,8 @@ export default function KalpaOptimiseDashboard() {
                               required
                             />
                             <p className="text-sm text-muted-foreground flex">
-                              Upload your AWS Cost & Usage Report (Parquet format)
+                              Upload your AWS Cost & Usage Report (Parquet
+                              format)
                             </p>
                           </div>
                         </div>
@@ -325,6 +339,42 @@ export default function KalpaOptimiseDashboard() {
                     icon={<DollarSign className="h-4 w-4" />}
                   />
                 </div>
+                <DialogUtilization
+                  utilizationHistory={hourlyUtilization}
+                  shouldOpen={openHourlyChart}
+                  setShouldOpen={setOpenHourlyChart}
+                />
+                <div className="grid gap-4 md:grid-cols-2">
+                  <Card>
+                    <CardHeader>
+                      <CardTitle>Reserved Instance Utilization</CardTitle>
+                      <CardDescription>
+                        Visual breakdown of RI utilization and optimization
+                        opportunities
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="h-80 w-full">
+                        <RiUtilizationChart />
+                      </div>
+                    </CardContent>
+                  </Card>
+
+                  <Card>
+                    <CardHeader>
+                      <CardTitle>Instance Type Distribution</CardTitle>
+                      <CardDescription>
+                        Breakdown by instance family across all compute services
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="h-80 w-full">
+                        <InstanceDistribution />
+                      </div>
+                    </CardContent>
+                  </Card>
+                </div>
+
                 <div className="mt-6">
                   <Card>
                     <CardHeader>
@@ -397,95 +447,6 @@ export default function KalpaOptimiseDashboard() {
                     </CardContent>
                   </Card>
                 </div>
-                <DialogUtilization
-                  utilizationHistory={hourlyUtilization}
-                  shouldOpen={openHourlyChart}
-                  setShouldOpen={setOpenHourlyChart}
-                />
-                <div className="grid gap-4 md:grid-cols-2">
-                  <Card>
-                    <CardHeader>
-                      <CardTitle>Cost Breakdown</CardTitle>
-                      <CardDescription>
-                        Current AWS service cost distribution
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="h-80 w-full">
-                        <CostBreakdownChart />
-                      </div>
-                    </CardContent>
-                  </Card>
-
-                  <Card>
-                    <CardHeader>
-                      <CardTitle>Cost Trend</CardTitle>
-                      <CardDescription>Last 3 months spending</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="h-80 w-full">
-                        <CostTrendChart />
-                      </div>
-                    </CardContent>
-                  </Card>
-                </div>
-
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Pricing Model Analysis</CardTitle>
-                    <CardDescription>
-                      Current vs. Optimized distribution
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="grid gap-6 md:grid-cols-2">
-                      <div>
-                        <h3 className="mb-2 text-sm font-medium">
-                          Current Distribution
-                        </h3>
-                        <div className="space-y-4">
-                          <PricingModelItem
-                            label="On-Demand Instances"
-                            value={75}
-                            cost="$9,337.50"
-                          />
-                          <PricingModelItem
-                            label="Reserved Instances"
-                            value={20}
-                            cost="$2,490.00"
-                          />
-                          <PricingModelItem
-                            label="Spot Instances"
-                            value={5}
-                            cost="$622.50"
-                          />
-                        </div>
-                      </div>
-                      <div>
-                        <h3 className="mb-2 text-sm font-medium">
-                          Recommended Distribution
-                        </h3>
-                        <div className="space-y-4">
-                          <PricingModelItem
-                            label="On-Demand Instances"
-                            value={40}
-                            cost="$3,668.00"
-                          />
-                          <PricingModelItem
-                            label="Reserved Instances"
-                            value={45}
-                            cost="$4,126.50"
-                          />
-                          <PricingModelItem
-                            label="Spot Instances"
-                            value={15}
-                            cost="$1,375.50"
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
               </TabsContent>
 
               <TabsContent value="recommendations" className="space-y-4">
@@ -601,7 +562,7 @@ function MetricCard({ title, value, trend, trendType, icon }: MetricCardProps) {
         {icon}
       </CardHeader>
       <CardContent>
-        <div className="text-2xl font-bold">{value}</div>
+        <div className="text-2xl pb-3 font-bold">{value}</div>
         <p
           className={`text-xs ${
             trendType === "positive"
@@ -611,7 +572,7 @@ function MetricCard({ title, value, trend, trendType, icon }: MetricCardProps) {
               : "text-muted-foreground"
           }`}
         >
-          {trend} {trendType !== "neutral" && "from last month"}
+          {trend} {trendType !== "neutral"}
         </p>
       </CardContent>
     </Card>
@@ -720,30 +681,90 @@ function SavingsPlanItem({
   );
 }
 
-function CostBreakdownChart() {
+function RiUtilizationChart() {
   return (
-    <div className="flex h-full w-full items-center justify-center">
-      <div className="text-center">
-        <PieChart className="mx-auto h-24 w-24 text-muted-foreground" />
-        <p className="mt-4 text-sm text-muted-foreground">
-          Cost breakdown chart showing EC2 (45%), RDS (20%), S3 (15%), and other
-          services (20%)
-        </p>
+    <>
+      <div className="grid grid-cols-2 gap-3 md:grid-cols-4 mb-6">
+        {riUtilizationData.map((item, index) => (
+          <div
+            key={index}
+            className="p-4 rounded-md text-center"
+            style={{
+              backgroundColor:
+                index === 0
+                  ? "#D1FAE5"
+                  : index === 1
+                  ? "#FEF3C7"
+                  : index === 2
+                  ? "#DBEAFE"
+                  : "#FEE2E2",
+            }}
+          >
+            <span
+              className="text-lg font-bold"
+              style={{
+                color:
+                  index === 0
+                    ? "#047857"
+                    : index === 1
+                    ? "#D97706"
+                    : index === 2
+                    ? "#2563EB"
+                    : "#DC2626",
+              }}
+            >
+              {item.value}
+            </span>
+            <p className="text-sm font-medium text-gray-700">{item.label}</p>
+            <p className="text-xs text-gray-500">{item.count}</p>
+          </div>
+        ))}
       </div>
-    </div>
+      <h3 className="text-md font-semibold mb-3">
+        Top RI Optimization Recommendations
+      </h3>
+      <div className="space-y-3">
+        {RiRecommendations.map((rec, index) => (
+          <div
+            key={index}
+            className="flex justify-between items-center p-3 border rounded-md shadow-sm"
+          >
+            <p className="text-sm font-medium text-gray-700">{rec.label}</p>
+            <Badge
+              className="px-3 py-1 text-white"
+              style={{
+                backgroundColor:
+                  index === 0 ? "#DC2626" : index === 1 ? "#047857" : "#2563EB",
+              }}
+            >
+              {rec.savings}
+            </Badge>
+          </div>
+        ))}
+      </div>
+    </>
   );
 }
 
-function CostTrendChart() {
+function InstanceDistribution() {
   return (
-    <div className="flex h-full w-full items-center justify-center">
-      <div className="text-center">
-        <BarChart className="mx-auto h-24 w-24 text-muted-foreground" />
-        <p className="mt-4 text-sm text-muted-foreground">
-          3-month cost trend showing January ($11,200), February ($11,500), and
-          March ($12,450)
-        </p>
-      </div>
-    </div>
+    <>
+      {instanceTypes.map((instance) => (
+        <div key={instance.family} className="w-full items-center space-x-4 mb-2">
+          <div className="flex justify-between w-full px-2">
+            <Label htmlFor={instance.family} className="w-24">
+              {instance.family}
+            </Label>
+            <div className="flex">
+              <div className="flex text-sm mb-1">
+                <span>{instance.count}</span>
+                <span>({instance.percentage}%)</span>
+              </div>
+            </div>
+          </div>
+          <Progress value={instance.percentage} className="h-6 rounded-sm bg-gray-200" />
+        </div>
+      ))}
+    </>
   );
 }
