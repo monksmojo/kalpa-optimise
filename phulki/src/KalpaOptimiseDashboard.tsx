@@ -181,10 +181,6 @@ export default function KalpaOptimiseDashboard() {
     return () => clearTimeout(timer);
   }, []);
 
-  if (isLoading) {
-    return <KalpaOptimiseDashboardSkeleton />;
-  }
-
   return (
     <SidebarProvider>
       <div className="flex min-h-screen w-full bg-muted/30">
@@ -239,7 +235,6 @@ export default function KalpaOptimiseDashboard() {
             </Button>
           </SidebarFooter>
         </Sidebar>
-
         <div className="flex-1 overflow-auto w-full">
           <header className="sticky top-0 z-10 flex h-16 items-center gap-4 border-b bg-background px-6 w-full">
             <SidebarTrigger />
@@ -250,280 +245,290 @@ export default function KalpaOptimiseDashboard() {
             </div>
           </header>
 
-          <main className="container mx-auto p-4 md:p-6">
-            <Tabs
-              value={activeTab}
-              onValueChange={setActiveTab}
-              className="space-y-4"
-            >
-              {activeTab !== "uploadCUR" && (
-                <TabsList className="grid w-full grid-cols-2">
-                  <TabsTrigger value="overview">Overview</TabsTrigger>
-                  <TabsTrigger value="recommendations">
-                    Recommendations
-                  </TabsTrigger>
-                </TabsList>
-              )}
+          {isLoading ? (
+            <KalpaOptimiseDashboardSkeleton />
+          ) : (
+            <main className="container mx-auto p-4 md:p-6">
+              <Tabs
+                value={activeTab}
+                onValueChange={setActiveTab}
+                className="space-y-4"
+              >
+                {activeTab !== "uploadCUR" && (
+                  <TabsList className="grid w-full grid-cols-2">
+                    <TabsTrigger value="overview">Overview</TabsTrigger>
+                    <TabsTrigger value="recommendations">
+                      Recommendations
+                    </TabsTrigger>
+                  </TabsList>
+                )}
 
-              <TabsContent value="uploadCUR">
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Upload Cost & Usage Report</CardTitle>
-                    <CardDescription>
-                      Provide your AWS Role ARN and upload your CUR file for
-                      analysis
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <form className="space-y-4" onSubmit={handleSubmit}>
-                      <div className="space-y-2">
-                        <Input
-                          className="w-full"
-                          id="roleArn"
-                          placeholder="arn:aws:iam::123456789012:role/example-role"
-                          value={roleArn}
-                          onChange={handleArnChange}
-                          required
-                        />
-                        <p className="text-sm text-muted-foreground flex">
-                          The Role ARN with permissions to cloudwatch data from
-                          your AWS Account
-                        </p>
-                      </div>
-
-                      <div className="flex gap-5">
+                <TabsContent value="uploadCUR">
+                  <Card>
+                    <CardHeader>
+                      <CardTitle>Upload Cost & Usage Report</CardTitle>
+                      <CardDescription>
+                        Provide your AWS Role ARN and upload your CUR file for
+                        analysis
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <form className="space-y-4" onSubmit={handleSubmit}>
                         <div className="space-y-2">
-                          <div className="grid w-full max-w-sm items-center gap-1.5">
-                            <Input
-                              id="curFile"
-                              type="file"
-                              accept=".parquet"
-                              onChange={handleFileChange}
-                              required
-                            />
-                            <p className="text-sm text-muted-foreground flex">
-                              Upload your AWS Cost & Usage Report (Parquet
-                              format)
-                            </p>
-                          </div>
+                          <Input
+                            className="w-full"
+                            id="roleArn"
+                            placeholder="arn:aws:iam::123456789012:role/example-role"
+                            value={roleArn}
+                            onChange={handleArnChange}
+                            required
+                          />
+                          <p className="text-sm text-muted-foreground flex">
+                            The Role ARN with permissions to cloudwatch data
+                            from your AWS Account
+                          </p>
                         </div>
 
-                        <Button type="submit" disabled={isSubmitting}>
-                          {isSubmitting ? (
-                            <>
-                              <Loader className="mr-2 h-4 w-4 animate-spin" />
-                              Processing...
-                            </>
-                          ) : (
-                            <>
-                              <Upload className="mr-2 h-4 w-4" />
-                              Upload and Analyze
-                            </>
-                          )}
-                        </Button>
-                      </div>
-                      {error && <p className="text-sm text-red-500">{error}</p>}
-                    </form>
-                  </CardContent>
-                </Card>
-              </TabsContent>
+                        <div className="flex gap-5">
+                          <div className="space-y-2">
+                            <div className="grid w-full max-w-sm items-center gap-1.5">
+                              <Input
+                                id="curFile"
+                                type="file"
+                                accept=".parquet"
+                                onChange={handleFileChange}
+                                required
+                              />
+                              <p className="text-sm text-muted-foreground flex">
+                                Upload your AWS Cost & Usage Report (Parquet
+                                format)
+                              </p>
+                            </div>
+                          </div>
 
-              {/* Rest of your code remains unchanged */}
-              <TabsContent value="overview" className="space-y-4">
-                <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-                  <MetricCard
-                    title="Total Compute Instances"
-                    value={metricsData.totalComputeInstance}
-                    icon={<CpuIcon className="h-4 w-4" />}
-                  />
-                  <MetricCard
-                    title="Active RIs"
-                    value={metricsData.activeRI}
-                    icon={<Check className="h-4 w-4" />}
-                  />
-                  <MetricCard
-                    title="RI Utilization"
-                    value={metricsData.riUtilization}
-                    icon={<BarChart className="h-4 w-4" />}
-                  />
-                  <MetricCard
-                    title="Potential Savings"
-                    value={metricsData.potentialSavings}
-                    icon={<DollarSign className="h-4 w-4" />}
-                  />
-                </div>
-                <DialogUtilization
-                  utilizationHistory={hourlyUtilization}
-                  shouldOpen={openHourlyChart}
-                  setShouldOpen={setOpenHourlyChart}
-                />
-                <div className="grid gap-4 md:grid-cols-2">
-                  <Card>
-                    <CardHeader>
-                      <CardTitle>Reserved Instance Utilization</CardTitle>
-                      <CardDescription>
-                        Visual breakdown of RI utilization and optimization
-                        opportunities
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="h-80 w-full">
-                        <RiUtilizationChart />
-                      </div>
+                          <Button type="submit" disabled={isSubmitting}>
+                            {isSubmitting ? (
+                              <>
+                                <Loader className="mr-2 h-4 w-4 animate-spin" />
+                                Processing...
+                              </>
+                            ) : (
+                              <>
+                                <Upload className="mr-2 h-4 w-4" />
+                                Upload and Analyze
+                              </>
+                            )}
+                          </Button>
+                        </div>
+                        {error && (
+                          <p className="text-sm text-red-500">{error}</p>
+                        )}
+                      </form>
                     </CardContent>
                   </Card>
+                </TabsContent>
 
+                {/* Rest of your code remains unchanged */}
+                <TabsContent value="overview" className="space-y-4">
+                  <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+                    <MetricCard
+                      title="Total Compute Instances"
+                      value={metricsData.totalComputeInstance}
+                      icon={<CpuIcon className="h-4 w-4" />}
+                    />
+                    <MetricCard
+                      title="Active RIs"
+                      value={metricsData.activeRI}
+                      icon={<Check className="h-4 w-4" />}
+                    />
+                    <MetricCard
+                      title="RI Utilization"
+                      value={metricsData.riUtilization}
+                      icon={<BarChart className="h-4 w-4" />}
+                    />
+                    <MetricCard
+                      title="Potential Savings"
+                      value={metricsData.potentialSavings}
+                      icon={<DollarSign className="h-4 w-4" />}
+                    />
+                  </div>
+                  <DialogUtilization
+                    utilizationHistory={hourlyUtilization}
+                    shouldOpen={openHourlyChart}
+                    setShouldOpen={setOpenHourlyChart}
+                  />
+                  <div className="grid gap-4 md:grid-cols-2">
+                    <Card>
+                      <CardHeader>
+                        <CardTitle>Reserved Instance Utilization</CardTitle>
+                        <CardDescription>
+                          Visual breakdown of RI utilization and optimization
+                          opportunities
+                        </CardDescription>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="h-80 w-full">
+                          <RiUtilizationChart />
+                        </div>
+                      </CardContent>
+                    </Card>
+
+                    <Card>
+                      <CardHeader>
+                        <CardTitle>Instance Type Distribution</CardTitle>
+                        <CardDescription>
+                          Breakdown by instance family across all compute
+                          services
+                        </CardDescription>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="h-80 w-full overflow-y-auto">
+                          <InstanceDistribution />
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </div>
+
+                  <div className="mt-6">
+                    <Card>
+                      <CardHeader>
+                        <CardTitle>Compute Utilization Analysis</CardTitle>
+                        <CardDescription>
+                          CPU and memory utilization across all compute
+                          instances
+                        </CardDescription>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="space-y-6">
+                          <div className="grid grid-cols-1 gap-6 md:grid-cols-1">
+                            <div>
+                              <h3 className="mb-4 text-sm font-medium">
+                                CPU Utilization
+                              </h3>
+                              <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+                                {utilizationData
+                                  .slice(0, 8)
+                                  .map((instance, i) => {
+                                    let bgColor;
+                                    if (instance.cpu < 20)
+                                      bgColor = "bg-rose-500";
+                                    else if (instance.cpu < 40)
+                                      bgColor = "bg-rose-300";
+                                    else if (instance.cpu < 60)
+                                      bgColor = "bg-amber-300";
+                                    else if (instance.cpu < 80)
+                                      bgColor = "bg-emerald-300";
+                                    else bgColor = "bg-emerald-500";
+
+                                    return (
+                                      <div
+                                        key={`cpu-${i}`}
+                                        className={`flex flex-col items-center justify-center rounded-md ${bgColor} p-2 text-white`}
+                                        onClick={() => {
+                                          setOpenHourlyChart(true);
+                                          setHourlyUtilization(
+                                            instance.hourlyHistory
+                                          );
+                                        }}
+                                      >
+                                        <span className="text-xs font-bold">
+                                          {instance.cpu}%
+                                        </span>
+                                        <span className="text-xs truncate max-w-full">
+                                          {instance.id}
+                                        </span>
+                                        <span className="text-xs">
+                                          {instance.type}
+                                        </span>
+                                        <span className="text-xs opacity-80">
+                                          {instance.service}
+                                        </span>
+                                      </div>
+                                    );
+                                  })}
+                              </div>
+                              <div className="mt-2 flex justify-between text-xs">
+                                <span className="text-rose-500">
+                                  Low (0-20%)
+                                </span>
+                                <span className="text-amber-500">
+                                  Medium (40-60%)
+                                </span>
+                                <span className="text-emerald-500">
+                                  High (80-100%)
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </div>
+                </TabsContent>
+
+                <TabsContent value="recommendations" className="space-y-4">
                   <Card>
                     <CardHeader>
-                      <CardTitle>Instance Type Distribution</CardTitle>
+                      <CardTitle>
+                        AI-Powered Reserved instance Recommendations
+                      </CardTitle>
                       <CardDescription>
-                        Breakdown by instance family across all compute services
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="h-80 w-full overflow-y-auto">
-                        <InstanceDistribution />
-                      </div>
-                    </CardContent>
-                  </Card>
-                </div>
-
-                <div className="mt-6">
-                  <Card>
-                    <CardHeader>
-                      <CardTitle>Compute Utilization Analysis</CardTitle>
-                      <CardDescription>
-                        CPU and memory utilization across all compute instances
+                        Based on your AWS Cost and Usage Report analysis
                       </CardDescription>
                     </CardHeader>
                     <CardContent>
                       <div className="space-y-6">
-                        <div className="grid grid-cols-1 gap-6 md:grid-cols-1">
-                          <div>
-                            <h3 className="mb-4 text-sm font-medium">
-                              CPU Utilization
-                            </h3>
-                            <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
-                              {utilizationData
-                                .slice(0, 8)
-                                .map((instance, i) => {
-                                  let bgColor;
-                                  if (instance.cpu < 20)
-                                    bgColor = "bg-rose-500";
-                                  else if (instance.cpu < 40)
-                                    bgColor = "bg-rose-300";
-                                  else if (instance.cpu < 60)
-                                    bgColor = "bg-amber-300";
-                                  else if (instance.cpu < 80)
-                                    bgColor = "bg-emerald-300";
-                                  else bgColor = "bg-emerald-500";
-
-                                  return (
-                                    <div
-                                      key={`cpu-${i}`}
-                                      className={`flex flex-col items-center justify-center rounded-md ${bgColor} p-2 text-white`}
-                                      onClick={() => {
-                                        setOpenHourlyChart(true);
-                                        setHourlyUtilization(
-                                          instance.hourlyHistory
-                                        );
-                                      }}
-                                    >
-                                      <span className="text-xs font-bold">
-                                        {instance.cpu}%
-                                      </span>
-                                      <span className="text-xs truncate max-w-full">
-                                        {instance.id}
-                                      </span>
-                                      <span className="text-xs">
-                                        {instance.type}
-                                      </span>
-                                      <span className="text-xs opacity-80">
-                                        {instance.service}
-                                      </span>
-                                    </div>
-                                  );
-                                })}
-                            </div>
-                            <div className="mt-2 flex justify-between text-xs">
-                              <span className="text-rose-500">Low (0-20%)</span>
-                              <span className="text-amber-500">
-                                Medium (40-60%)
-                              </span>
-                              <span className="text-emerald-500">
-                                High (80-100%)
-                              </span>
-                            </div>
-                          </div>
-                        </div>
+                        <RecommendationItem
+                          title="EC2 Instance Rightsizing"
+                          description="Replace 5 t2.micro instances with 3 t3.small instances in us-east-1"
+                          savings="$420/month"
+                          impact="High"
+                          category="Compute"
+                        />
+                        <RecommendationItem
+                          title="Reserved Instance Purchase"
+                          description="Purchase 3-year RI for consistently running m5.xlarge instances"
+                          savings="$850/month"
+                          impact="High"
+                          category="Pricing Model"
+                        />
                       </div>
                     </CardContent>
                   </Card>
-                </div>
-              </TabsContent>
 
-              <TabsContent value="recommendations" className="space-y-4">
-                <Card>
-                  <CardHeader>
-                    <CardTitle>
-                      AI-Powered Reserved instance Recommendations
-                    </CardTitle>
-                    <CardDescription>
-                      Based on your AWS Cost and Usage Report analysis
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-6">
-                      <RecommendationItem
-                        title="EC2 Instance Rightsizing"
-                        description="Replace 5 t2.micro instances with 3 t3.small instances in us-east-1"
-                        savings="$420/month"
-                        impact="High"
-                        category="Compute"
-                      />
-                      <RecommendationItem
-                        title="Reserved Instance Purchase"
-                        description="Purchase 3-year RI for consistently running m5.xlarge instances"
-                        savings="$850/month"
-                        impact="High"
-                        category="Pricing Model"
-                      />
-                    </div>
-                  </CardContent>
-                </Card>
-
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Additional Recommendations</CardTitle>
-                    <CardDescription>
-                      Additional savings opportunities based on your usage
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-6">
-                      <SavingsPlanItem
-                        type="Compute Savings Plan"
-                        term="1 Year"
-                        commitment="$4,500/month"
-                        savings="$1,350/month"
-                        roi="30%"
-                      />
-                      <SavingsPlanItem
-                        type="EC2 Instance Savings Plan"
-                        term="3 Years"
-                        commitment="$3,200/month"
-                        savings="$1,280/month"
-                        roi="40%"
-                      />
-                    </div>
-                  </CardContent>
-                </Card>
-                <CardFooter>
-                  <Button className="w-full">Check Metrics</Button>
-                </CardFooter>
-              </TabsContent>
-            </Tabs>
-          </main>
+                  <Card>
+                    <CardHeader>
+                      <CardTitle>Additional Recommendations</CardTitle>
+                      <CardDescription>
+                        Additional savings opportunities based on your usage
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-6">
+                        <SavingsPlanItem
+                          type="Compute Savings Plan"
+                          term="1 Year"
+                          commitment="$4,500/month"
+                          savings="$1,350/month"
+                          roi="30%"
+                        />
+                        <SavingsPlanItem
+                          type="EC2 Instance Savings Plan"
+                          term="3 Years"
+                          commitment="$3,200/month"
+                          savings="$1,280/month"
+                          roi="40%"
+                        />
+                      </div>
+                    </CardContent>
+                  </Card>
+                  <CardFooter>
+                    <Button className="w-full">Check Metrics</Button>
+                  </CardFooter>
+                </TabsContent>
+              </Tabs>
+            </main>
+          )}
         </div>
       </div>
     </SidebarProvider>
