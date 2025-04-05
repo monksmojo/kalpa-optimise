@@ -579,28 +579,6 @@ function MetricCard({ title, value, trend, trendType, icon }: MetricCardProps) {
   );
 }
 
-// Other component definitions remain unchanged...
-interface PricingModelItemProps {
-  label: string;
-  value: number;
-  cost: string;
-}
-
-function PricingModelItem({ label, value, cost }: PricingModelItemProps) {
-  return (
-    <div className="space-y-2">
-      <div className="flex items-center justify-between">
-        <span className="text-sm">{label}</span>
-        <span className="text-sm font-medium">{cost}</span>
-      </div>
-      <Progress value={value} className="h-2" />
-      <div className="text-xs text-muted-foreground">
-        {value}% of total cost
-      </div>
-    </div>
-  );
-}
-
 function RecommendationItem({
   title,
   description,
