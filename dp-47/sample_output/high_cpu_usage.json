@@ -1,0 +1,626 @@
+[
+  {
+    "line_item_resource_id": "i-011dcab7fe91424d6",
+    "product_instance_type": "t2.large",
+    "line_item_product_code": "AmazonEC2",
+    "line_item_usage_type": [
+      {
+        "line_item_usage_start_hour": "00:00:00",
+        "line_item_usage_amount": 220.0
+      },
+      {
+        "line_item_usage_start_hour": "01:00:00",
+        "line_item_usage_amount": 312.0
+      },
+      {
+        "line_item_usage_start_hour": "02:00:00",
+        "line_item_usage_amount": 46.0
+      },
+      {
+        "line_item_usage_start_hour": "03:00:00",
+        "line_item_usage_amount": 308.0
+      },
+      {
+        "line_item_usage_start_hour": "04:00:00",
+        "line_item_usage_amount": 220.0
+      },
+      {
+        "line_item_usage_start_hour": "05:00:00",
+        "line_item_usage_amount": 23.0
+      },
+      {
+        "line_item_usage_start_hour": "06:00:00",
+        "line_item_usage_amount": 216.0
+      },
+      {
+        "line_item_usage_start_hour": "07:00:00",
+        "line_item_usage_amount": 220.0
+      },
+      {
+        "line_item_usage_start_hour": "08:00:00",
+        "line_item_usage_amount": 220.0
+      },
+      {
+        "line_item_usage_start_hour": "09:00:00",
+        "line_item_usage_amount": 46.0
+      },
+      {
+        "line_item_usage_start_hour": "10:00:00",
+        "line_item_usage_amount": 46.0
+      },
+      {
+        "line_item_usage_start_hour": "11:00:00",
+        "line_item_usage_amount": 220.0
+      },
+      {
+        "line_item_usage_start_hour": "12:00:00",
+        "line_item_usage_amount": 23.0
+      },
+      {
+        "line_item_usage_start_hour": "13:00:00",
+        "line_item_usage_amount": 220.0
+      },
+      {
+        "line_item_usage_start_hour": "14:00:00",
+        "line_item_usage_amount": 46.0
+      },
+      {
+        "line_item_usage_start_hour": "15:00:00",
+        "line_item_usage_amount": 23.0
+      },
+      {
+        "line_item_usage_start_hour": "16:00:00",
+        "line_item_usage_amount": 23.0
+      },
+      {
+        "line_item_usage_start_hour": "17:00:00",
+        "line_item_usage_amount": 220.0
+      },
+      {
+        "line_item_usage_start_hour": "18:00:00",
+        "line_item_usage_amount": 308.0
+      },
+      {
+        "line_item_usage_start_hour": "19:00:00",
+        "line_item_usage_amount": 220.0
+      },
+      {
+        "line_item_usage_start_hour": "20:00:00",
+        "line_item_usage_amount": 23.0
+      },
+      {
+        "line_item_usage_start_hour": "21:00:00",
+        "line_item_usage_amount": 23.0
+      },
+      {
+        "line_item_usage_start_hour": "22:00:00",
+        "line_item_usage_amount": 46.0
+      },
+      {
+        "line_item_usage_start_hour": "23:00:00",
+        "line_item_usage_amount": 220.0
+      }
+    ],
+    "product_region": "us-east-1"
+  },
+  {
+    "line_item_resource_id": "i-01858470cc1b08555",
+    "product_instance_type": "t2.nano",
+    "line_item_product_code": "AmazonEC2",
+    "line_item_usage_type": [
+      {
+        "line_item_usage_start_hour": "00:00:00",
+        "line_item_usage_amount": 308.0
+      },
+      {
+        "line_item_usage_start_hour": "01:00:00",
+        "line_item_usage_amount": 220.0
+      },
+      {
+        "line_item_usage_start_hour": "02:00:00",
+        "line_item_usage_amount": 23.0
+      },
+      {
+        "line_item_usage_start_hour": "03:00:00",
+        "line_item_usage_amount": 220.0
+      },
+      {
+        "line_item_usage_start_hour": "04:00:00",
+        "line_item_usage_amount": 216.0
+      },
+      {
+        "line_item_usage_start_hour": "05:00:00",
+        "line_item_usage_amount": 220.0
+      },
+      {
+        "line_item_usage_start_hour": "06:00:00",
+        "line_item_usage_amount": 23.0
+      },
+      {
+        "line_item_usage_start_hour": "07:00:00",
+        "line_item_usage_amount": 23.0
+      },
+      {
+        "line_item_usage_start_hour": "08:00:00",
+        "line_item_usage_amount": 220.0
+      },
+      {
+        "line_item_usage_start_hour": "09:00:00",
+        "line_item_usage_amount": 308.0
+      },
+      {
+        "line_item_usage_start_hour": "10:00:00",
+        "line_item_usage_amount": 308.0
+      },
+      {
+        "line_item_usage_start_hour": "11:00:00",
+        "line_item_usage_amount": 46.0
+      },
+      {
+        "line_item_usage_start_hour": "12:00:00",
+        "line_item_usage_amount": 46.0
+      },
+      {
+        "line_item_usage_start_hour": "13:00:00",
+        "line_item_usage_amount": 220.0
+      },
+      {
+        "line_item_usage_start_hour": "14:00:00",
+        "line_item_usage_amount": 23.0
+      },
+      {
+        "line_item_usage_start_hour": "15:00:00",
+        "line_item_usage_amount": 220.0
+      },
+      {
+        "line_item_usage_start_hour": "16:00:00",
+        "line_item_usage_amount": 220.0
+      },
+      {
+        "line_item_usage_start_hour": "17:00:00",
+        "line_item_usage_amount": 308.0
+      },
+      {
+        "line_item_usage_start_hour": "18:00:00",
+        "line_item_usage_amount": 46.0
+      },
+      {
+        "line_item_usage_start_hour": "19:00:00",
+        "line_item_usage_amount": 46.0
+      },
+      {
+        "line_item_usage_start_hour": "20:00:00",
+        "line_item_usage_amount": 220.0
+      },
+      {
+        "line_item_usage_start_hour": "21:00:00",
+        "line_item_usage_amount": 308.0
+      },
+      {
+        "line_item_usage_start_hour": "22:00:00",
+        "line_item_usage_amount": 46.0
+      },
+      {
+        "line_item_usage_start_hour": "23:00:00",
+        "line_item_usage_amount": 308.0
+      }
+    ],
+    "product_region": "us-east-1"
+  },
+  {
+    "line_item_resource_id": "i-01c24bac399144aa9",
+    "product_instance_type": "m5.large",
+    "line_item_product_code": "AmazonEC2",
+    "line_item_usage_type": [
+      {
+        "line_item_usage_start_hour": "00:00:00",
+        "line_item_usage_amount": 220.0
+      },
+      {
+        "line_item_usage_start_hour": "01:00:00",
+        "line_item_usage_amount": 220.0
+      },
+      {
+        "line_item_usage_start_hour": "02:00:00",
+        "line_item_usage_amount": 216.0
+      },
+      {
+        "line_item_usage_start_hour": "03:00:00",
+        "line_item_usage_amount": 46.0
+      },
+      {
+        "line_item_usage_start_hour": "04:00:00",
+        "line_item_usage_amount": 220.0
+      },
+      {
+        "line_item_usage_start_hour": "05:00:00",
+        "line_item_usage_amount": 220.0
+      },
+      {
+        "line_item_usage_start_hour": "06:00:00",
+        "line_item_usage_amount": 23.0
+      },
+      {
+        "line_item_usage_start_hour": "07:00:00",
+        "line_item_usage_amount": 308.0
+      },
+      {
+        "line_item_usage_start_hour": "08:00:00",
+        "line_item_usage_amount": 23.0
+      },
+      {
+        "line_item_usage_start_hour": "09:00:00",
+        "line_item_usage_amount": 23.0
+      },
+      {
+        "line_item_usage_start_hour": "10:00:00",
+        "line_item_usage_amount": 46.0
+      },
+      {
+        "line_item_usage_start_hour": "11:00:00",
+        "line_item_usage_amount": 220.0
+      },
+      {
+        "line_item_usage_start_hour": "12:00:00",
+        "line_item_usage_amount": 220.0
+      },
+      {
+        "line_item_usage_start_hour": "13:00:00",
+        "line_item_usage_amount": 46.0
+      },
+      {
+        "line_item_usage_start_hour": "14:00:00",
+        "line_item_usage_amount": 46.0
+      },
+      {
+        "line_item_usage_start_hour": "15:00:00",
+        "line_item_usage_amount": 46.0
+      },
+      {
+        "line_item_usage_start_hour": "16:00:00",
+        "line_item_usage_amount": 46.0
+      },
+      {
+        "line_item_usage_start_hour": "17:00:00",
+        "line_item_usage_amount": 46.0
+      },
+      {
+        "line_item_usage_start_hour": "18:00:00",
+        "line_item_usage_amount": 220.0
+      },
+      {
+        "line_item_usage_start_hour": "19:00:00",
+        "line_item_usage_amount": 23.0
+      },
+      {
+        "line_item_usage_start_hour": "20:00:00",
+        "line_item_usage_amount": 46.0
+      },
+      {
+        "line_item_usage_start_hour": "21:00:00",
+        "line_item_usage_amount": 23.0
+      },
+      {
+        "line_item_usage_start_hour": "22:00:00",
+        "line_item_usage_amount": 46.0
+      },
+      {
+        "line_item_usage_start_hour": "23:00:00",
+        "line_item_usage_amount": 46.0
+      }
+    ],
+    "product_region": "us-east-1"
+  },
+  {
+    "line_item_resource_id": "i-0342529a9832468d5",
+    "product_instance_type": "t2.micro",
+    "line_item_product_code": "AmazonEC2",
+    "line_item_usage_type": [
+      {
+        "line_item_usage_start_hour": "00:00:00",
+        "line_item_usage_amount": 46.0
+      },
+      {
+        "line_item_usage_start_hour": "01:00:00",
+        "line_item_usage_amount": 46.0
+      },
+      {
+        "line_item_usage_start_hour": "02:00:00",
+        "line_item_usage_amount": 46.0
+      },
+      {
+        "line_item_usage_start_hour": "03:00:00",
+        "line_item_usage_amount": 46.0
+      },
+      {
+        "line_item_usage_start_hour": "04:00:00",
+        "line_item_usage_amount": 46.0
+      },
+      {
+        "line_item_usage_start_hour": "05:00:00",
+        "line_item_usage_amount": 23.0
+      },
+      {
+        "line_item_usage_start_hour": "06:00:00",
+        "line_item_usage_amount": 220.0
+      },
+      {
+        "line_item_usage_start_hour": "07:00:00",
+        "line_item_usage_amount": 46.0
+      },
+      {
+        "line_item_usage_start_hour": "08:00:00",
+        "line_item_usage_amount": 23.0
+      },
+      {
+        "line_item_usage_start_hour": "09:00:00",
+        "line_item_usage_amount": 308.0
+      },
+      {
+        "line_item_usage_start_hour": "10:00:00",
+        "line_item_usage_amount": 220.0
+      },
+      {
+        "line_item_usage_start_hour": "11:00:00",
+        "line_item_usage_amount": 23.0
+      },
+      {
+        "line_item_usage_start_hour": "12:00:00",
+        "line_item_usage_amount": 46.0
+      },
+      {
+        "line_item_usage_start_hour": "13:00:00",
+        "line_item_usage_amount": 308.0
+      },
+      {
+        "line_item_usage_start_hour": "14:00:00",
+        "line_item_usage_amount": 308.0
+      },
+      {
+        "line_item_usage_start_hour": "15:00:00",
+        "line_item_usage_amount": 46.0
+      },
+      {
+        "line_item_usage_start_hour": "16:00:00",
+        "line_item_usage_amount": 220.0
+      },
+      {
+        "line_item_usage_start_hour": "17:00:00",
+        "line_item_usage_amount": 46.0
+      },
+      {
+        "line_item_usage_start_hour": "18:00:00",
+        "line_item_usage_amount": 220.0
+      },
+      {
+        "line_item_usage_start_hour": "19:00:00",
+        "line_item_usage_amount": 216.0
+      },
+      {
+        "line_item_usage_start_hour": "20:00:00",
+        "line_item_usage_amount": 308.0
+      },
+      {
+        "line_item_usage_start_hour": "21:00:00",
+        "line_item_usage_amount": 220.0
+      },
+      {
+        "line_item_usage_start_hour": "22:00:00",
+        "line_item_usage_amount": 220.0
+      },
+      {
+        "line_item_usage_start_hour": "23:00:00",
+        "line_item_usage_amount": 220.0
+      }
+    ],
+    "product_region": "eu-west-2"
+  },
+  {
+    "line_item_resource_id": "i-0474184642c5de81d",
+    "product_instance_type": "c5.large",
+    "line_item_product_code": "AmazonEC2",
+    "line_item_usage_type": [
+      {
+        "line_item_usage_start_hour": "00:00:00",
+        "line_item_usage_amount": 23.0
+      },
+      {
+        "line_item_usage_start_hour": "01:00:00",
+        "line_item_usage_amount": 46.0
+      },
+      {
+        "line_item_usage_start_hour": "02:00:00",
+        "line_item_usage_amount": 46.0
+      },
+      {
+        "line_item_usage_start_hour": "03:00:00",
+        "line_item_usage_amount": 216.0
+      },
+      {
+        "line_item_usage_start_hour": "04:00:00",
+        "line_item_usage_amount": 220.0
+      },
+      {
+        "line_item_usage_start_hour": "05:00:00",
+        "line_item_usage_amount": 308.0
+      },
+      {
+        "line_item_usage_start_hour": "06:00:00",
+        "line_item_usage_amount": 23.0
+      },
+      {
+        "line_item_usage_start_hour": "07:00:00",
+        "line_item_usage_amount": 308.0
+      },
+      {
+        "line_item_usage_start_hour": "08:00:00",
+        "line_item_usage_amount": 46.0
+      },
+      {
+        "line_item_usage_start_hour": "09:00:00",
+        "line_item_usage_amount": 216.0
+      },
+      {
+        "line_item_usage_start_hour": "10:00:00",
+        "line_item_usage_amount": 46.0
+      },
+      {
+        "line_item_usage_start_hour": "11:00:00",
+        "line_item_usage_amount": 46.0
+      },
+      {
+        "line_item_usage_start_hour": "12:00:00",
+        "line_item_usage_amount": 23.0
+      },
+      {
+        "line_item_usage_start_hour": "13:00:00",
+        "line_item_usage_amount": 216.0
+      },
+      {
+        "line_item_usage_start_hour": "14:00:00",
+        "line_item_usage_amount": 46.0
+      },
+      {
+        "line_item_usage_start_hour": "15:00:00",
+        "line_item_usage_amount": 46.0
+      },
+      {
+        "line_item_usage_start_hour": "16:00:00",
+        "line_item_usage_amount": 220.0
+      },
+      {
+        "line_item_usage_start_hour": "17:00:00",
+        "line_item_usage_amount": 308.0
+      },
+      {
+        "line_item_usage_start_hour": "18:00:00",
+        "line_item_usage_amount": 46.0
+      },
+      {
+        "line_item_usage_start_hour": "19:00:00",
+        "line_item_usage_amount": 308.0
+      },
+      {
+        "line_item_usage_start_hour": "20:00:00",
+        "line_item_usage_amount": 216.304444
+      },
+      {
+        "line_item_usage_start_hour": "21:00:00",
+        "line_item_usage_amount": 308.0
+      },
+      {
+        "line_item_usage_start_hour": "22:00:00",
+        "line_item_usage_amount": 46.0
+      },
+      {
+        "line_item_usage_start_hour": "23:00:00",
+        "line_item_usage_amount": 308.0
+      }
+    ],
+    "product_region": "us-east-1"
+  },
+  {
+    "line_item_resource_id": "i-0f6011f7fc36d46ee",
+    "product_instance_type": "t2.micro",
+    "line_item_product_code": "AmazonEC2",
+    "line_item_usage_type": [
+      {
+        "line_item_usage_start_hour": "00:00:00",
+        "line_item_usage_amount": 22.75
+      },
+      {
+        "line_item_usage_start_hour": "01:00:00",
+        "line_item_usage_amount": 220.0
+      },
+      {
+        "line_item_usage_start_hour": "02:00:00",
+        "line_item_usage_amount": 46.0
+      },
+      {
+        "line_item_usage_start_hour": "03:00:00",
+        "line_item_usage_amount": 23.0
+      },
+      {
+        "line_item_usage_start_hour": "04:00:00",
+        "line_item_usage_amount": 220.0
+      },
+      {
+        "line_item_usage_start_hour": "05:00:00",
+        "line_item_usage_amount": 220.0
+      },
+      {
+        "line_item_usage_start_hour": "06:00:00",
+        "line_item_usage_amount": 220.0
+      },
+      {
+        "line_item_usage_start_hour": "07:00:00",
+        "line_item_usage_amount": 46.0
+      },
+      {
+        "line_item_usage_start_hour": "08:00:00",
+        "line_item_usage_amount": 308.0
+      },
+      {
+        "line_item_usage_start_hour": "09:00:00",
+        "line_item_usage_amount": 46.0
+      },
+      {
+        "line_item_usage_start_hour": "10:00:00",
+        "line_item_usage_amount": 46.0
+      },
+      {
+        "line_item_usage_start_hour": "11:00:00",
+        "line_item_usage_amount": 308.0
+      },
+      {
+        "line_item_usage_start_hour": "12:00:00",
+        "line_item_usage_amount": 23.0
+      },
+      {
+        "line_item_usage_start_hour": "13:00:00",
+        "line_item_usage_amount": 46.0
+      },
+      {
+        "line_item_usage_start_hour": "14:00:00",
+        "line_item_usage_amount": 308.0
+      },
+      {
+        "line_item_usage_start_hour": "15:00:00",
+        "line_item_usage_amount": 220.0
+      },
+      {
+        "line_item_usage_start_hour": "16:00:00",
+        "line_item_usage_amount": 46.0
+      },
+      {
+        "line_item_usage_start_hour": "17:00:00",
+        "line_item_usage_amount": 46.0
+      },
+      {
+        "line_item_usage_start_hour": "18:00:00",
+        "line_item_usage_amount": 308.0
+      },
+      {
+        "line_item_usage_start_hour": "19:00:00",
+        "line_item_usage_amount": 46.0
+      },
+      {
+        "line_item_usage_start_hour": "20:00:00",
+        "line_item_usage_amount": 46.0
+      },
+      {
+        "line_item_usage_start_hour": "21:00:00",
+        "line_item_usage_amount": 220.0
+      },
+      {
+        "line_item_usage_start_hour": "22:00:00",
+        "line_item_usage_amount": 220.0
+      },
+      {
+        "line_item_usage_start_hour": "23:00:00",
+        "line_item_usage_amount": 46.0
+      }
+    ],
+    "product_region": "us-east-1"
+  }
+]
