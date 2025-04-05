@@ -9,7 +9,7 @@ import {
   LineChart,
   TrendingDown,
   Upload,
-  Loader,
+  Loader
 } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
@@ -20,7 +20,7 @@ import {
   CardDescription,
   CardFooter,
   CardHeader,
-  CardTitle,
+  CardTitle
 } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -37,7 +37,7 @@ import {
   SidebarGroupLabel,
   SidebarGroupContent,
   SidebarTrigger,
-  SidebarSeparator,
+  SidebarSeparator
 } from "@/components/ui/sidebar";
 import { Input } from "./components/ui/input";
 import { utilizationData } from "./data/utilizationData";
@@ -59,8 +59,8 @@ export default function KalpaOptimiseDashboard() {
   const [hourlyUtilization, setHourlyUtilization] = useState([
     {
       Hour: "",
-      MeanCPUUtilization: 0,
-    },
+      MeanCPUUtilization: 0
+    }
   ]);
   const [openHourlyChart, setOpenHourlyChart] = useState(false);
 
@@ -99,7 +99,7 @@ export default function KalpaOptimiseDashboard() {
       const getSignedUrlResponse = await fetch(
         `https://5ce9usd6he.execute-api.us-east-1.amazonaws.com/pre-signed-url?roleARN=${roleArn}`,
         {
-          method: "GET",
+          method: "GET"
         }
       ).then((response) => response.json());
       const signedUrl = getSignedUrlResponse.signedUrl;
@@ -109,13 +109,13 @@ export default function KalpaOptimiseDashboard() {
 
       try {
         const requestBody = {
-          roleArn,
+          roleArn
         };
         const response = await fetch(
           "https://cusatad2yy5avtvs7tauul5h4e0hzcbz.lambda-url.us-east-1.on.aws/",
           {
             method: "POST",
-            body: JSON.stringify(requestBody),
+            body: JSON.stringify(requestBody)
           }
         );
 
@@ -133,9 +133,9 @@ export default function KalpaOptimiseDashboard() {
         const uploadResponse = await fetch(signedUrl, {
           method: "PUT",
           headers: {
-            "Content-Type": "application/vnd.apache.parquet",
+            "Content-Type": "application/vnd.apache.parquet"
           },
-          body: file,
+          body: file
         });
 
         if (!uploadResponse.ok) {
@@ -584,7 +584,7 @@ function RecommendationItem({
   description,
   savings,
   impact,
-  category,
+  category
 }: {
   title: string;
   description: string;
@@ -635,7 +635,7 @@ function SavingsPlanItem({
   term,
   commitment,
   savings,
-  roi,
+  roi
 }: SavingsPlanItemProps) {
   return (
     <div className="space-y-2 rounded-lg border p-4">
@@ -675,7 +675,7 @@ function RiUtilizationChart() {
                   ? "#FEF3C7"
                   : index === 2
                   ? "#DBEAFE"
-                  : "#FEE2E2",
+                  : "#FEE2E2"
             }}
           >
             <span
@@ -688,7 +688,7 @@ function RiUtilizationChart() {
                     ? "#D97706"
                     : index === 2
                     ? "#2563EB"
-                    : "#DC2626",
+                    : "#DC2626"
               }}
             >
               {item.value}
@@ -712,7 +712,7 @@ function RiUtilizationChart() {
               className="px-3 py-1 text-white"
               style={{
                 backgroundColor:
-                  index === 0 ? "#DC2626" : index === 1 ? "#047857" : "#2563EB",
+                  index === 0 ? "#DC2626" : index === 1 ? "#047857" : "#2563EB"
               }}
             >
               {rec.savings}
@@ -728,7 +728,10 @@ function InstanceDistribution() {
   return (
     <>
       {instanceTypes.map((instance) => (
-        <div key={instance.family} className="w-full items-center space-x-4 mb-2">
+        <div
+          key={instance.family}
+          className="w-full items-center space-x-4 mb-2"
+        >
           <div className="flex justify-between w-full px-2">
             <Label htmlFor={instance.family} className="w-24">
               {instance.family}
@@ -740,7 +743,10 @@ function InstanceDistribution() {
               </div>
             </div>
           </div>
-          <Progress value={instance.percentage} className="h-6 rounded-sm bg-gray-200" />
+          <Progress
+            value={instance.percentage}
+            className="h-6 rounded-sm bg-gray-200"
+          />
         </div>
       ))}
     </>
