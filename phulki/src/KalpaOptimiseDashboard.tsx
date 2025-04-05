@@ -368,7 +368,7 @@ export default function KalpaOptimiseDashboard() {
                       </CardDescription>
                     </CardHeader>
                     <CardContent>
-                      <div className="h-80 w-full">
+                      <div className="h-80 w-full overflow-y-auto">
                         <InstanceDistribution />
                       </div>
                     </CardContent>
