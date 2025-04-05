@@ -1,4 +1,4 @@
-export const instanceTypes = [
+export const instanceDistributionData = [
   { family: "mb family", count: 8, percentage: 35 },
   { family: "c5 family", count: 5, percentage: 22 },
   { family: "r5 family", count: 4, percentage: 17 },

@@ -47,6 +47,7 @@ import { RecommendationItem } from "@/components/charts/RecommendationItem";
 import { RiUtilizationChart } from "@/components/charts/RiUtilizationChart";
 import { InstanceDistribution } from "@/components/charts/InstanceDistribution";
 import { SavingsPlanItem } from "@/components/charts/SavingsPlanItem";
+import { response } from "@/data/response";
 
 export default function KalpaOptimiseDashboard() {
   const [isLoading, setIsLoading] = useState(true);
@@ -411,7 +412,7 @@ export default function KalpaOptimiseDashboard() {
                                   .map((instance, i) => {
                                     let bgColor;
                                     if (instance.cpu < 20)
-                                      bgColor = "bg-rose-500";
+                                      bgColor = "bg-red-500";
                                     else if (instance.cpu < 40)
                                       bgColor = "bg-rose-300";
                                     else if (instance.cpu < 60)
@@ -478,20 +479,20 @@ export default function KalpaOptimiseDashboard() {
                     </CardHeader>
                     <CardContent>
                       <div className="space-y-6">
-                        <RecommendationItem
-                          title="EC2 Instance Rightsizing"
-                          description="Replace 5 t2.micro instances with 3 t3.small instances in us-east-1"
-                          savings="$420/month"
-                          impact="High"
-                          category="Compute"
-                        />
-                        <RecommendationItem
-                          title="Reserved Instance Purchase"
-                          description="Purchase 3-year RI for consistently running m5.xlarge instances"
-                          savings="$850/month"
-                          impact="High"
-                          category="Pricing Model"
-                        />
+                        {response.recommendations.reservedInstances.map(
+                          (ri) => (
+                            <RecommendationItem
+                              title={ri.title}
+                              description={ri.description}
+                              savings={ri.savings}
+                              impact={
+                                ["High", "Medium", "Low"].includes(ri.impact)
+                                  ? (ri.impact as "High" | "Medium" | "Low")
+                                  : "Low"
+                              }
+                            />
+                          )
+                        )}
                       </div>
                     </CardContent>
                   </Card>
@@ -505,20 +506,17 @@ export default function KalpaOptimiseDashboard() {
                     </CardHeader>
                     <CardContent>
                       <div className="space-y-6">
-                        <SavingsPlanItem
-                          type="Compute Savings Plan"
-                          term="1 Year"
-                          commitment="$4,500/month"
-                          savings="$1,350/month"
-                          roi="30%"
-                        />
-                        <SavingsPlanItem
-                          type="EC2 Instance Savings Plan"
-                          term="3 Years"
-                          commitment="$3,200/month"
-                          savings="$1,280/month"
-                          roi="40%"
-                        />
+                        {response.recommendations.additionalRecommendations.map(
+                          (recommendations) => (
+                            <SavingsPlanItem
+                              name={recommendations.name}
+                              term={recommendations.term}
+                              commitment={recommendations.commitment}
+                              savings={recommendations.savings}
+                              savingsPercent={recommendations.savingsPercent}
+                            />
+                          )
+                        )}
                       </div>
                     </CardContent>
                   </Card>

@@ -1,11 +1,11 @@
-import { instanceTypes } from "@/data/instanceDistribution";
+import { instanceDistributionData } from "@/data/instanceDistributionData";
 import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
 
 export function InstanceDistribution() {
   return (
     <>
-      {instanceTypes.map((instance) => (
+      {instanceDistributionData.map((instance) => (
         <div
           key={instance.family}
           className="w-full items-center space-x-4 mb-2"
