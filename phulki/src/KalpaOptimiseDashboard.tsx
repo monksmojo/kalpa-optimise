@@ -562,10 +562,8 @@ export default function KalpaOptimiseDashboard() {
                             (recommendations) => (
                               <SavingsPlanItem
                                 name={recommendations.name}
-                                term={recommendations.term}
-                                commitment={recommendations.commitment}
                                 savings={recommendations.savings}
-                                savingsPercent={recommendations.savingsPercent}
+                                reason={recommendations.reason}
                               />
                             )
                           )}
