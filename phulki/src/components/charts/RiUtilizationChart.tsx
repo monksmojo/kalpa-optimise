@@ -1,11 +1,11 @@
-import { riRecommendations, riUtilizationData } from "@/data/riUtilizationData";
 import { Badge } from "@/components/ui/badge";
+import { response } from "@/data/response";
 
 export function RiUtilizationChart() {
   return (
     <>
       <div className="grid grid-cols-2 gap-3 md:grid-cols-4 mb-6">
-        {riUtilizationData.map((item, index) => (
+        {response.riUtilizationData.map((item, index) => (
           <div
             key={index}
             className="p-4 rounded-md text-center"
@@ -44,7 +44,7 @@ export function RiUtilizationChart() {
         Top RI Optimization Recommendations
       </h3>
       <div className="space-y-3">
-        {riRecommendations.map((rec, index) => (
+        {response.riRecommendations.map((rec, index) => (
           <div
             key={index}
             className="flex justify-between items-center p-3 border rounded-md shadow-sm"

@@ -38,8 +38,6 @@ import {
   SidebarSeparator
 } from "@/components/ui/sidebar";
 import { Input } from "./components/ui/input";
-import { utilizationData } from "./data/utilizationData";
-import { metricsData } from "@/data/metricsData";
 import { DialogUtilization } from "@/components/DialogUtilization";
 import KalpaOptimiseDashboardSkeleton from "./KalpaOptimiseDashboardSkeleton";
 import { MetricCard } from "@/components/charts/MetricCart";
@@ -334,22 +332,22 @@ export default function KalpaOptimiseDashboard() {
                   <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
                     <MetricCard
                       title="Total Compute Instances"
-                      value={metricsData.totalComputeInstance}
+                      value={response.metrics.totalComputeInstance}
                       icon={<CpuIcon className="h-4 w-4" />}
                     />
                     <MetricCard
                       title="Active RIs"
-                      value={metricsData.activeRI}
+                      value={response.metrics.activeRI}
                       icon={<Check className="h-4 w-4" />}
                     />
                     <MetricCard
                       title="RI Utilization"
-                      value={metricsData.riUtilization}
+                      value={response.metrics.riUtilization}
                       icon={<BarChart className="h-4 w-4" />}
                     />
                     <MetricCard
                       title="Potential Savings"
-                      value={metricsData.potentialSavings}
+                      value={response.metrics.potentialSavings}
                       icon={<DollarSign className="h-4 w-4" />}
                     />
                   </div>
@@ -407,7 +405,7 @@ export default function KalpaOptimiseDashboard() {
                                 CPU Utilization
                               </h3>
                               <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
-                                {utilizationData
+                                {response.utilizationData
                                   .slice(0, 8)
                                   .map((instance, i) => {
                                     let bgColor;

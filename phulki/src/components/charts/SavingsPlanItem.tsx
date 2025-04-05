@@ -28,7 +28,9 @@ export function SavingsPlanItem({
       </div>
       <div className="flex items-center gap-4 pt-2">
         <span className="text-sm">Commitment: {commitment}</span>
-        <span className="text-sm text-emerald-500">ROI: {savingsPercent}</span>
+        <span className="text-sm text-emerald-500">
+          Savings percent: {savingsPercent}
+        </span>
       </div>
     </div>
   );
