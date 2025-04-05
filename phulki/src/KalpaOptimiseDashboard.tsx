@@ -46,9 +46,10 @@ import { RecommendationItem } from "@/components/charts/RecommendationItem";
 import { RiUtilizationChart } from "@/components/charts/RiUtilizationChart";
 import { InstanceDistribution } from "@/components/charts/InstanceDistribution";
 import { SavingsPlanItem } from "@/components/charts/SavingsPlanItem";
+import { InProgress } from "@/components/charts/InProgress";
 
 const API_URL = import.meta.env.VITE_REPORT_URL;
-const ACCOUNT_ID = 123456789012; // Replace with your actual account ID
+const ACCOUNT_ID = 3233; // Replace with your actual account ID
 
 export default function KalpaOptimiseDashboard() {
   const [isLoading, setIsLoading] = useState(true);
@@ -67,6 +68,7 @@ export default function KalpaOptimiseDashboard() {
       reservedInstances: Array<any>;
       additionalRecommendations: Array<any>;
     };
+    message?: string;
   }
 
   const [response, setResponse] = useState<ResponseData>({
@@ -82,6 +84,7 @@ export default function KalpaOptimiseDashboard() {
       additionalRecommendations: []
     }
   });
+  console.log("🚀 ~ KalpaOptimiseDashboard ~ response:", response);
 
   // Form state variables
   const [roleArn, setRoleArn] = useState<string>("");
@@ -288,6 +291,10 @@ export default function KalpaOptimiseDashboard() {
 
           {isLoading ? (
             <KalpaOptimiseDashboardSkeleton />
+          ) : response.message ? (
+            <div className="flex flex-col justify-center min-h-dvh">
+              <InProgress message={response.message} />
+            </div>
           ) : (
             <main className="container mx-auto p-4 md:p-6">
               <Tabs
