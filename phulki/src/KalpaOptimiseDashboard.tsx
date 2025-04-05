@@ -14,7 +14,7 @@ import {
   Copy,
   ChevronRight,
   ChevronDown,
-  ChevronUp,
+  ChevronUp
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -24,7 +24,7 @@ import {
   CardDescription,
   CardFooter,
   CardHeader,
-  CardTitle,
+  CardTitle
 } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
@@ -40,7 +40,7 @@ import {
   SidebarGroupLabel,
   SidebarGroupContent,
   SidebarTrigger,
-  SidebarSeparator,
+  SidebarSeparator
 } from "@/components/ui/sidebar";
 import { Input } from "./components/ui/input";
 import { DialogUtilization } from "@/components/DialogUtilization";
@@ -53,7 +53,7 @@ import { SavingsPlanItem } from "@/components/charts/SavingsPlanItem";
 import { InProgress } from "@/components/charts/InProgress";
 
 const API_URL = import.meta.env.VITE_REPORT_URL;
-const ACCOUNT_ID = 518435766071;
+const ACCOUNT_ID = 1234567890;
 
 interface PolicyState {
   trustPolicy: boolean;
@@ -84,7 +84,7 @@ interface PolicyObject {
 
 export default function KalpaOptimiseDashboard() {
   const [isLoading, setIsLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState("overview");
+  const [activeTab, setActiveTab] = useState("uploadCUR");
   interface Metrics {
     totalComputeInstance: number;
     activeRI: number;
@@ -107,14 +107,14 @@ export default function KalpaOptimiseDashboard() {
       totalComputeInstance: 0,
       activeRI: 0,
       riUtilization: 0,
-      potentialSavings: 0,
+      potentialSavings: 0
     },
     utilizationData: [],
     recommendations: {
       reservedInstances: [],
-      additionalRecommendations: [],
+      additionalRecommendations: []
     },
-    message: "",
+    message: ""
   });
   console.log("🚀 ~ KalpaOptimiseDashboard ~ response:", response);
 
@@ -127,8 +127,8 @@ export default function KalpaOptimiseDashboard() {
   const [hourlyUtilization, setHourlyUtilization] = useState([
     {
       Hour: "",
-      MeanCPUUtilization: 0,
-    },
+      MeanCPUUtilization: 0
+    }
   ]);
   const [openHourlyChart, setOpenHourlyChart] = useState(false);
 
@@ -167,7 +167,7 @@ export default function KalpaOptimiseDashboard() {
       const getSignedUrlResponse = await fetch(
         `https://5ce9usd6he.execute-api.us-east-1.amazonaws.com/pre-signed-url?roleARN=${roleArn}`,
         {
-          method: "GET",
+          method: "GET"
         }
       ).then((response) => response.json());
       const signedUrl = getSignedUrlResponse.signedUrl;
@@ -177,13 +177,13 @@ export default function KalpaOptimiseDashboard() {
 
       try {
         const requestBody = {
-          roleArn,
+          roleArn
         };
         const response = await fetch(
           "https://cusatad2yy5avtvs7tauul5h4e0hzcbz.lambda-url.us-east-1.on.aws/",
           {
             method: "POST",
-            body: JSON.stringify(requestBody),
+            body: JSON.stringify(requestBody)
           }
         );
 
@@ -201,9 +201,9 @@ export default function KalpaOptimiseDashboard() {
         const uploadResponse = await fetch(signedUrl, {
           method: "PUT",
           headers: {
-            "Content-Type": "application/vnd.apache.parquet",
+            "Content-Type": "application/vnd.apache.parquet"
           },
-          body: file,
+          body: file
         });
 
         if (!uploadResponse.ok) {
@@ -261,7 +261,7 @@ export default function KalpaOptimiseDashboard() {
   const [copied, setCopied] = useState<PolicyState>({
     trustPolicy: false,
     readOnlyPolicy: false,
-    curPolicy: false,
+    curPolicy: false
   });
 
   const [expandedSteps, setExpandedSteps] = useState<ExpandedStepsState>({
@@ -270,7 +270,7 @@ export default function KalpaOptimiseDashboard() {
     step3: false,
     step4: false,
     step5: false,
-    step6: false,
+    step6: false
   });
 
   const trustPolicy: PolicyObject = {
@@ -279,11 +279,11 @@ export default function KalpaOptimiseDashboard() {
       {
         Effect: "Allow",
         Principal: {
-          AWS: "arn:aws:iam::518435766071:role/service-role/cloudwatch-ingestion-role-od68zupr",
+          AWS: "arn:aws:iam::518435766071:role/service-role/cloudwatch-ingestion-role-od68zupr"
         },
-        Action: "sts:AssumeRole",
-      },
-    ],
+        Action: "sts:AssumeRole"
+      }
+    ]
   };
 
   const cloudWatchReadOnlyPolicy: PolicyObject = {
@@ -292,9 +292,9 @@ export default function KalpaOptimiseDashboard() {
       {
         Effect: "Allow",
         Action: ["cloudwatch:Describe*", "cloudwatch:Get*", "cloudwatch:List*"],
-        Resource: "*",
-      },
-    ],
+        Resource: "*"
+      }
+    ]
   };
 
   const copyToClipboard = (
@@ -311,7 +311,7 @@ export default function KalpaOptimiseDashboard() {
   const toggleStep = (step: keyof ExpandedStepsState): void => {
     setExpandedSteps((prev) => ({
       ...prev,
-      [step]: !prev[step],
+      [step]: !prev[step]
     }));
   };
 
