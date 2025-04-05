@@ -1012,7 +1012,12 @@ export default function KalpaOptimiseDashboard() {
                       </CardContent>
                     </Card>
                     <CardFooter>
-                      <Button className="w-full">Check Metrics</Button>
+                      <Button
+                        className="w-full"
+                        onClick={() => setActiveTab("overview")}
+                      >
+                        Check Metrics
+                      </Button>
                     </CardFooter>
                   </TabsContent>
                 )}
