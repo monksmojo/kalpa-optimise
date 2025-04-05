@@ -1,0 +1,98 @@
+[
+  {
+    "Hour": "0:00",
+    "MeanCPUUtilization": 3.031377092968584
+  },
+  {
+    "Hour": "1:00",
+    "MeanCPUUtilization": 6.066357627825918
+  },
+  {
+    "Hour": "2:00",
+    "MeanCPUUtilization": 3.0946027595446184
+  },
+  {
+    "Hour": "3:00",
+    "MeanCPUUtilization": 2.652826755927839
+  },
+  {
+    "Hour": "4:00",
+    "MeanCPUUtilization": 9.95026286565549
+  },
+  {
+    "Hour": "5:00",
+    "MeanCPUUtilization": 9.975719606770145
+  },
+  {
+    "Hour": "6:00",
+    "MeanCPUUtilization": 6.150254240874485
+  },
+  {
+    "Hour": "7:00",
+    "MeanCPUUtilization": 10.539039571940744
+  },
+  {
+    "Hour": "8:00",
+    "MeanCPUUtilization": 3.3233889924926427
+  },
+  {
+    "Hour": "9:00",
+    "MeanCPUUtilization": 10.202207641741657
+  },
+  {
+    "Hour": "10:00",
+    "MeanCPUUtilization": 3.3500918376263185
+  },
+  {
+    "Hour": "11:00",
+    "MeanCPUUtilization": 2.7673808075724775
+  },
+  {
+    "Hour": "12:00",
+    "MeanCPUUtilization": 40.39874005752385
+  },
+  {
+    "Hour": "13:00",
+    "MeanCPUUtilization": 27.57649667597588
+  },
+  {
+    "Hour": "14:00",
+    "MeanCPUUtilization": 5.142884859515039
+  },
+  {
+    "Hour": "15:00",
+    "MeanCPUUtilization": 3.0326462969007477
+  },
+  {
+    "Hour": "16:00",
+    "MeanCPUUtilization": 2.72167992927441
+  },
+  {
+    "Hour": "17:00",
+    "MeanCPUUtilization": 4.951835548368724
+  },
+  {
+    "Hour": "18:00",
+    "MeanCPUUtilization": 5.173798776115688
+  },
+  {
+    "Hour": "19:00",
+    "MeanCPUUtilization": 6.059275114183463
+  },
+  {
+    "Hour": "20:00",
+    "MeanCPUUtilization": 2.780734468676649
+  },
+  {
+    "Hour": "21:00",
+    "MeanCPUUtilization": 5.190570457067995
+  },
+  {
+    "Hour": "22:00",
+    "MeanCPUUtilization": 4.103533314087453
+  },
+  {
+    "Hour": "23:00",
+    "MeanCPUUtilization": 6.1858729530045435
+  }
+]

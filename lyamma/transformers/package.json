@@ -1,0 +1,13 @@
+{
+  "name": "transformers",
+  "version": "1.0.0",
+  "description": "Data transformers",
+  "main": "index.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "utilization": "node src/utilization.js"
+  },
+  "author": "Bimochan Shrestha",
+  "license": "MIT",
+  "type": "module"
+}
